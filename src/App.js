@@ -1,14 +1,15 @@
 import React, { useMemo, useReducer } from "react";
+import { Keyboard } from "react-native";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar } from "native-base";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProgressDialog from "./components/progressDialog";
 import { initialProgress, ProgressContext, progressReducer } from "./contexts";
 import constants from "./constants";
+import colors from "./constants/colors";
 import routes from "./routes";
 
 import HomeScreen from "./screens/home";
-import colors from "./constants/colors";
 
 const Stack = createStackNavigator();
 
@@ -45,7 +46,8 @@ const App = () => {
       theme={{
         dark: colorMode === "dark",
         colors: { ...DefaultTheme.colors, background: colors.transparent },
-      }}>
+      }}
+      onStateChange={Keyboard.dismiss}>
       <ProgressContext.Provider value={progressContext}>
         <Box
           _dark={{ bg: "blueGray.900" }}
@@ -54,7 +56,7 @@ const App = () => {
           safeArea>
           <StatusBar
             backgroundColor={
-              colorMode === "light" ? colors.blueGray50 : colors.blueGray900
+              colorMode === "light" ? colors.blueGray[50] : colors.blueGray[900]
             }
             barStyle={colorMode === "light" ? "dark-content" : "light-content"}
           />

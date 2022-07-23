@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Keyboard, Platform, BackHandler } from "react-native";
-import { Box, HStack, Spinner, Text, useColorMode, VStack } from "native-base";
+import { Box, HStack, Spinner, Text, VStack } from "native-base";
 import styles from "./styles";
 
 export default function ProgressDialog(props) {
   const { visible, label } = props;
-  const { colorMode } = useColorMode();
 
   useEffect(() => {
     if (visible) {
@@ -47,7 +46,8 @@ export default function ProgressDialog(props) {
           <HStack alignItems="center" space={3}>
             <Spinner
               size="lg"
-              color={colorMode === "light" ? "primary.900" : "primary.50"}
+              _light={{ color: "primary.900" }}
+              _dark={{ color: "primary.50" }}
             />
             <Text fontSize="md">{label || "Cargando"}...</Text>
           </HStack>

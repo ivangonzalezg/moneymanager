@@ -1,7 +1,3 @@
-const colors = {
-  transparent: "transparent",
-  blueGray50: "#F8FAFC",
-  blueGray900: "#0F172A",
-};
+import colors from "native-base/src/theme/base/colors";
 
-export default colors;
+export default { ...colors, transparent: "transparent" };
