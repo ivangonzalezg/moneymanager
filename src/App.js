@@ -1,29 +1,28 @@
-import React, { useMemo, useReducer } from "react";
-import { Keyboard } from "react-native";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar } from "native-base";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { is24HourFormat } from "react-native-device-time-format";
 import ProgressDialog from "./components/progressDialog";
-import { initialProgress, ProgressContext, progressReducer } from "./contexts";
+import {
+  initialProgress,
+  initialState,
+  ProgressContext,
+  progressReducer,
+  StateContext,
+  stateReducer,
+} from "./contexts";
 import constants from "./constants";
 import colors from "./constants/colors";
 import routes from "./routes";
 
 import HomeScreen from "./screens/home";
+import TransactionScreen from "./screens/transaction";
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const { VISIBLE, HIDDEN } = constants.progress;
-
-const Routes = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={routes.home}>
-      <Stack.Screen name={routes.home} component={HomeScreen} />
-    </Stack.Navigator>
-  );
-};
+const { IS_24_HOUR } = constants.state;
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -31,6 +30,7 @@ const App = () => {
     progressReducer,
     initialProgress,
   );
+  const [state, dispatchState] = useReducer(stateReducer, initialState);
 
   const progressContext = useMemo(
     () => ({
@@ -41,28 +41,55 @@ const App = () => {
     [],
   );
 
+  const stateContext = useMemo(
+    () => ({
+      updateIs24Hour: is24Hour => dispatchState({ type: IS_24_HOUR, is24Hour }),
+      ...state,
+    }),
+    [state],
+  );
+
+  useEffect(() => {
+    is24HourFormat().then(is24Hour =>
+      dispatchState({ type: IS_24_HOUR, is24Hour }),
+    );
+  }, []);
+
   return (
     <NavigationContainer
       theme={{
         dark: colorMode === "dark",
         colors: { ...DefaultTheme.colors, background: colors.transparent },
-      }}
-      onStateChange={Keyboard.dismiss}>
+      }}>
       <ProgressContext.Provider value={progressContext}>
-        <Box
-          _dark={{ bg: "blueGray.900" }}
-          _light={{ bg: "blueGray.50" }}
-          flex={1}
-          safeArea>
-          <StatusBar
-            backgroundColor={
-              colorMode === "light" ? colors.blueGray[50] : colors.blueGray[900]
-            }
-            barStyle={colorMode === "light" ? "dark-content" : "light-content"}
-          />
-          <Routes />
-        </Box>
-        <ProgressDialog visible={progress.visible} label={progress.label} />
+        <StateContext.Provider value={stateContext}>
+          <Box
+            _dark={{ bg: "blueGray.900" }}
+            _light={{ bg: "blueGray.50" }}
+            flex={1}
+            safeArea>
+            <StatusBar
+              backgroundColor={
+                colorMode === "light"
+                  ? colors.blueGray[50]
+                  : colors.blueGray[900]
+              }
+              barStyle={
+                colorMode === "light" ? "dark-content" : "light-content"
+              }
+            />
+            <Stack.Navigator
+              screenOptions={{ headerShown: false }}
+              initialRouteName={routes.home}>
+              <Stack.Screen name={routes.home} component={HomeScreen} />
+              <Stack.Screen
+                name={routes.transaction}
+                component={TransactionScreen}
+              />
+            </Stack.Navigator>
+          </Box>
+          <ProgressDialog visible={progress.visible} label={progress.label} />
+        </StateContext.Provider>
       </ProgressContext.Provider>
     </NavigationContainer>
   );

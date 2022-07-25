@@ -8,19 +8,19 @@ import {
   Icon,
   IconButton,
   Input,
+  Pressable,
   SectionList,
   Text,
   VStack,
 } from "native-base";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import moment from "moment";
 import SimpleEmoji from "simple-react-native-emoji";
 import styles from "./styles";
 import Container from "../../components/container";
-import { formatToCurrency } from "../../utils";
 import colors from "../../constants/colors";
-import Button from "../../components/button";
+import { formatToCurrency } from "../../utils";
+import routes from "../../routes";
 
 const transactions = [
   {
@@ -154,7 +154,7 @@ const transactions = [
       {
         id: 18,
         date: new Date(),
-        categoryName: "Alimentación",
+        categoryName: "Alimentación1",
         amount: 1000,
         categoryIcon: "fork_and_knife",
       },
@@ -162,7 +162,9 @@ const transactions = [
   },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = props => {
+  const { navigation } = props;
+
   return (
     <Container noScroll>
       <HStack
@@ -177,11 +179,10 @@ const HomeScreen = () => {
           fontSize="sm"
           variant="unstyled"
           flex={1}
-          opacity={90}
           InputLeftElement={
             <Icon
-              as={MaterialIcons}
-              name="search"
+              as={MaterialCommunityIcons}
+              name="magnify"
               my={2}
               ml={2}
               size={6}
@@ -207,12 +208,12 @@ const HomeScreen = () => {
                 _dark={{ color: colors.muted[900] }}
               />
             }
-            onPress={() => console.log("okk")}
+            onPress={() => navigation.navigate(routes.transaction)}
           />
         </VStack>
       </HStack>
       <Center mt={5} mb={7}>
-        <Text opacity={70}>Gastado esta mes</Text>
+        <Text opacity={70}>Gastado este mes</Text>
         <Heading fontSize="4xl">{formatToCurrency(1000)}</Heading>
       </Center>
       <SectionList
@@ -226,7 +227,7 @@ const HomeScreen = () => {
           </Box>
         )}
         renderItem={({ item }) => (
-          <Button onPress={() => {}}>
+          <Pressable onPress={() => navigation.navigate(routes.transaction)}>
             <HStack space={5} alignItems="center" my={3}>
               <SimpleEmoji shortName={item.categoryIcon} style={styles.icon} />
               <VStack flex={1}>
@@ -234,21 +235,21 @@ const HomeScreen = () => {
                   <VStack flex={1} justifyContent="center">
                     <Text bold>{item.categoryName}</Text>
                     {Boolean(item.description) && (
-                      <Text numberOfLines={2} opacity={70}>
-                        {item.description} {item.description} {item.description}
+                      <Text numberOfLines={1} opacity={70}>
+                        {item.description}
                       </Text>
                     )}
                   </VStack>
                   <VStack>
                     <Text bold>{formatToCurrency(item.amount)}</Text>
-                    <Text alignSelf="flex-end" opacity={50}>
+                    <Text alignSelf="flex-end" opacity={70}>
                       {moment(item.date).format(moment.HTML5_FMT.TIME)}
                     </Text>
                   </VStack>
                 </HStack>
               </VStack>
             </HStack>
-          </Button>
+          </Pressable>
         )}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={Divider}

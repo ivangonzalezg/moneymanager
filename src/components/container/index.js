@@ -13,7 +13,12 @@ const Container = props => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
-        <Box flex={1} px={noPadding ? 0 : 5} _android={{ pb: 3 }}>
+        <Box
+          _android={{ pb: 3 }}
+          _dark={{ bg: "blueGray.900" }}
+          _light={{ bg: "blueGray.50" }}
+          flex={1}
+          px={noPadding ? 0 : 5}>
           {children}
         </Box>
       </Wrapper>
@@ -21,7 +26,7 @@ const Container = props => {
   );
 };
 
-export default Container;
+export default React.memo(Container);
 
 Container.propTypes = {
   children: PropTypes.node.isRequired,

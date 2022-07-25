@@ -1,7 +1,6 @@
 const routes = {
   home: "home",
-  signIn: "sign-in",
-  signUp: "sign-up",
+  transaction: "transaction",
 };
 
 export default routes;

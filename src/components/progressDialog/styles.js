@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
       default: Dimensions.get("screen").height,
     }),
     backgroundColor: "rgba(0,0,0,0.5)",
-    zIndex: 99,
+    zIndex: 9999,
   },
 });
 
