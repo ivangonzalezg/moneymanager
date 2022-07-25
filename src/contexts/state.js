@@ -4,11 +4,11 @@ import constants from "../constants";
 const { IS_24_HOUR } = constants.state;
 
 const initialState = {
-  is24Hour: false,
+  transactions: new Date().getTime(),
 };
 
 const StateContext = createContext({
-  updateIs24Hour: (is24Hour = false) => {},
+  updateTransactions: () => {},
   ...initialState,
 });
 
@@ -17,7 +17,7 @@ const stateReducer = (prevState, action) => {
     case IS_24_HOUR:
       return {
         ...prevState,
-        is24Hour: action.is24Hour,
+        transactions: new Date().getTime(),
       };
     default:
       return prevState;

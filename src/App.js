@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useReducer } from "react";
+import React, { useMemo, useReducer } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar } from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { is24HourFormat } from "react-native-device-time-format";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -22,7 +21,7 @@ import TransactionScreen from "./screens/transaction";
 const Stack = createNativeStackNavigator();
 
 const { VISIBLE, HIDDEN } = constants.progress;
-const { IS_24_HOUR } = constants.state;
+const { TRANSACTIONS } = constants.state;
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -43,17 +42,11 @@ const App = () => {
 
   const stateContext = useMemo(
     () => ({
-      updateIs24Hour: is24Hour => dispatchState({ type: IS_24_HOUR, is24Hour }),
+      updateTransactions: () => dispatchState({ type: TRANSACTIONS }),
       ...state,
     }),
     [state],
   );
-
-  useEffect(() => {
-    is24HourFormat().then(is24Hour =>
-      dispatchState({ type: IS_24_HOUR, is24Hour }),
-    );
-  }, []);
 
   return (
     <NavigationContainer

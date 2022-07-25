@@ -4,7 +4,7 @@ const constants = {
     HIDDEN: "hidden",
   },
   state: {
-    IS_24_HOUR: "is_24_hour",
+    TRANSACTIONS: "transactions",
   },
 };
 

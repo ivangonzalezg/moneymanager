@@ -1,5 +1,8 @@
 import moment from "moment";
 import numbro from "numbro";
+import * as RNLocalize from "react-native-localize";
+
+const is24Hour = RNLocalize.uses24HourClock();
 
 const formatToCurrency = (number = 0) => {
   return numbro(Math.ceil(Number(number))).format({
@@ -15,7 +18,7 @@ const capitalize = (string = "") =>
 const isSameDate = (a = moment(), b = moment()) =>
   a.format(moment.HTML5_FMT.DATE) === b.format(moment.HTML5_FMT.DATE);
 
-const formatDate = (dateTime = moment(), is24Hour = false) => {
+const formatDate = (dateTime = moment()) => {
   const hour = dateTime.hour();
   const date = isSameDate(dateTime, moment())
     ? "hoy,"
@@ -28,4 +31,4 @@ const formatDate = (dateTime = moment(), is24Hour = false) => {
   return `${capitalize(date)} ${dateTime.format(is24Hour ? "H:mm" : "h:mm A")}`;
 };
 
-export { formatToCurrency, formatDate };
+export { formatToCurrency, formatDate, is24Hour };

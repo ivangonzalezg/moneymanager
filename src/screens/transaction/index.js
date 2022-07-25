@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Actionsheet,
   Button,
@@ -26,7 +26,6 @@ import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
 import categories from "../../constants/categories";
 import { formatDate, formatToCurrency } from "../../utils";
-import { StateContext } from "../../contexts";
 
 const VirtualKeyboard = React.memo(
   RNVirtualKeyboard,
@@ -55,7 +54,6 @@ const keyboard = [
 const TransactionScreen = () => {
   const [amount, setAmount] = useState(0);
   const { colorMode } = useColorMode();
-  const { is24Hour } = useContext(StateContext);
   const [category, setCategory] = useState(categories.home);
   const {
     isOpen: isCategoryList,
@@ -129,7 +127,7 @@ const TransactionScreen = () => {
       <Divider />
       <HStack alignItems="center">
         <Pressable py={3} pl={2} pr={3} onPress={onOpenDatePicker}>
-          <Text>{formatDate(moment(date), is24Hour)}</Text>
+          <Text>{formatDate(moment(date))}</Text>
         </Pressable>
         <Pressable
           flex={1}
