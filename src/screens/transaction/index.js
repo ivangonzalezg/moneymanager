@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { Dimensions } from "react-native";
 import {
   Actionsheet,
+  Box,
   Button,
   Center,
   Divider,
@@ -20,12 +22,15 @@ import SimpleEmoji from "simple-react-native-emoji";
 import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
+import useKeyboardHeight from "react-native-use-keyboard-height";
 import styles from "./styles";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
 import categories from "../../constants/categories";
 import { formatDate, formatToCurrency } from "../../utils";
+
+const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
 const VirtualKeyboard = React.memo(
   RNVirtualKeyboard,
@@ -52,8 +57,9 @@ const keyboard = [
 ];
 
 const TransactionScreen = () => {
-  const [amount, setAmount] = useState(0);
   const { colorMode } = useColorMode();
+  const keyboardHeight = useKeyboardHeight();
+  const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState(categories.home);
   const {
     isOpen: isCategoryList,
@@ -155,12 +161,19 @@ const TransactionScreen = () => {
         </Pressable>
       </HStack>
       <Divider />
+      <Box
+        h={`${
+          virtualKeyboardHeight < keyboardHeight
+            ? keyboardHeight - virtualKeyboardHeight
+            : 0
+        }px`}
+      />
       <VirtualKeyboard
         amount={amount}
         colorMode={colorMode}
         onKeyDown={onPress}
         keyboardStyle={[
-          styles.keyboard,
+          { height: virtualKeyboardHeight },
           {
             backgroundColor:
               colorMode === "light"

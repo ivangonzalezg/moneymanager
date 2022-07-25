@@ -24,6 +24,7 @@
     "react-native-screen-keyboard": "^1.2.2",
     "react-native-screens": "~3.10.2",
     "react-native-svg": "^12.1.1",
+    "react-native-use-keyboard-height": "^0.1.1",
     "react-native-vector-icons": "^9.2.0",
     "rn-android-keyboard-adjust": "^2.0.0",
     "simple-react-native-emoji": "^1.0.4"

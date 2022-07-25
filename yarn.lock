@@ -6255,11 +6255,6 @@ react-native-date-picker@^4.2.5:
   dependencies:
     prop-types "^15.8.1"
 
-react-native-device-time-format@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-device-time-format/-/react-native-device-time-format-2.3.0.tgz#87f4c91a90b8a0ca2dc059cf82d3063c823126fc"
-  integrity sha512-al4m6MXD1nT+W8p7UsJpyc4aaNRwh85oLC+sNe+PfCxlxVUDmriBN8dEDLjaDxfnX2yDub3PHLcLmuZqcI6jrw==
-
 react-native-iphone-x-helper@^1.0.3:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
@@ -6272,6 +6267,11 @@ react-native-keyboard-aware-scroll-view@^0.9.5:
   dependencies:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
+
+react-native-localize@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-localize/-/react-native-localize-2.2.2.tgz#a1c6369000c9dae6800eded8ddb1673bf090f84e"
+  integrity sha512-j9aAYyuZblq27XPW3h/cZuBP2WA1OOsEPjTHszPQ/YcM9VrrrYnfpJObP4IyghxmS8i+7Jhoh7qp8CjunfrFjw==
 
 "react-native-material-ripple@git+https://github.com/aspect-apps/react-native-material-ripple.git":
   version "0.8.0"
@@ -6306,6 +6306,11 @@ react-native-svg@^12.1.1:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
+
+react-native-use-keyboard-height@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-use-keyboard-height/-/react-native-use-keyboard-height-0.1.1.tgz#d6da2a475a0328d2212a801950566a85d4ba3204"
+  integrity sha512-Sof2fk4YmuIuU7NYq2btaAmtQYVI67xtP5EZDsvrEq+58t4mwRoKCLcjbf1xqiY1vmd9+8ckzwpO5z5dmcokOA==
 
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
