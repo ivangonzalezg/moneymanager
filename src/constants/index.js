@@ -6,6 +6,9 @@ const constants = {
   state: {
     TRANSACTIONS: "transactions",
   },
+  tables: {
+    TRANSACTIONS: "transactions",
+  },
 };
 
 export default constants;

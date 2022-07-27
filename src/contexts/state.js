@@ -1,10 +1,10 @@
 import { createContext } from "react";
 import constants from "../constants";
 
-const { IS_24_HOUR } = constants.state;
+const { TRANSACTIONS } = constants.state;
 
 const initialState = {
-  transactions: new Date().getTime(),
+  transactions: "",
 };
 
 const StateContext = createContext({
@@ -14,7 +14,7 @@ const StateContext = createContext({
 
 const stateReducer = (prevState, action) => {
   switch (action.type) {
-    case IS_24_HOUR:
+    case TRANSACTIONS:
       return {
         ...prevState,
         transactions: new Date().getTime(),

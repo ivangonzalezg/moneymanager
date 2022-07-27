@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Center,
@@ -8,162 +8,44 @@ import {
   Icon,
   IconButton,
   Input,
-  Pressable,
   SectionList,
   Text,
   VStack,
 } from "native-base";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import moment from "moment";
-import SimpleEmoji from "simple-react-native-emoji";
 import styles from "./styles";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
-import { formatToCurrency } from "../../utils";
+import {
+  formatToCurrency,
+  transformTransactionsIntoSections,
+} from "../../utils";
 import routes from "../../routes";
-
-const transactions = [
-  {
-    title: "Hoy",
-    data: [
-      {
-        id: 1,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 2,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-      },
-      {
-        id: 3,
-        date: new Date(),
-        categoryName: "Alimentación",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-      {
-        id: 4,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 5,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-        description: "Cogí una puerca para ir al centro",
-      },
-      {
-        id: 6,
-        date: new Date(),
-        categoryName: "Alimentación",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-    ],
-  },
-  {
-    title: "Ayer",
-    data: [
-      {
-        id: 7,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 8,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-      },
-      {
-        id: 9,
-        date: new Date(),
-        categoryName: "Alimentación",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-      {
-        id: 10,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 11,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-      },
-      {
-        id: 12,
-        date: new Date(),
-        categoryName: "Alimentación",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-      {
-        id: 13,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 14,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-      },
-      {
-        id: 15,
-        date: new Date(),
-        categoryName: "Alimentación",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-      {
-        id: 16,
-        date: new Date(),
-        categoryName: "Hogar",
-        amount: 1000,
-        categoryIcon: "house",
-      },
-      {
-        id: 17,
-        date: new Date(),
-        categoryName: "Transporte",
-        amount: 1000,
-        categoryIcon: "car",
-      },
-      {
-        id: 18,
-        date: new Date(),
-        categoryName: "Alimentación1",
-        amount: 1000,
-        categoryIcon: "fork_and_knife",
-      },
-    ],
-  },
-];
+import { StateContext } from "../../contexts";
+import database from "../../database";
+import TransactionCard from "../../components/transactionCard";
 
 const HomeScreen = props => {
   const { navigation } = props;
+  const state = useContext(StateContext);
+  const [monthExpenses, setMonthExpenses] = useState(0);
+  const [sections, setSections] = useState([]);
+  const [isRefreshing, setIsRefreshing] = useState(true);
+
+  const getTransactions = async () => {
+    try {
+      setIsRefreshing(true);
+      const _monthExpenses = await database.getMonthExpenses();
+      setMonthExpenses(_monthExpenses);
+      const transactions = await database.getTransactions();
+      setSections(transformTransactionsIntoSections(transactions));
+    } catch (_) {}
+    setIsRefreshing(false);
+  };
+
+  useEffect(() => {
+    getTransactions();
+  }, [state.transactions]);
 
   return (
     <Container noScroll>
@@ -212,48 +94,50 @@ const HomeScreen = props => {
           />
         </VStack>
       </HStack>
-      <Center mt={5} mb={7}>
-        <Text opacity={70}>Gastado este mes</Text>
-        <Heading fontSize="4xl">{formatToCurrency(1000)}</Heading>
-      </Center>
       <SectionList
-        sections={transactions}
+        ListHeaderComponent={() => (
+          <Center mt={10}>
+            <Text opacity={70}>Gastado este mes</Text>
+            <Heading fontSize="4xl">{formatToCurrency(monthExpenses)}</Heading>
+          </Center>
+        )}
+        sections={sections}
         renderSectionHeader={({ section }) => (
           <Box
+            pt={10}
             _dark={{ bg: "blueGray.900" }}
-            _light={{ bg: "blueGray.50" }}
-            pb={1}>
-            <Heading>{section.title}</Heading>
+            _light={{ bg: "blueGray.50" }}>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold opacity={70}>
+                {section.title}
+              </Text>
+              <Text bold opacity={70}>
+                {formatToCurrency(section.total)}
+              </Text>
+            </HStack>
+            <Divider mt={2} />
           </Box>
         )}
-        renderItem={({ item }) => (
-          <Pressable onPress={() => navigation.navigate(routes.transaction)}>
-            <HStack space={5} alignItems="center" my={3}>
-              <SimpleEmoji shortName={item.categoryIcon} style={styles.icon} />
-              <VStack flex={1}>
-                <HStack flex={1} space={2}>
-                  <VStack flex={1} justifyContent="center">
-                    <Text bold>{item.categoryName}</Text>
-                    {Boolean(item.description) && (
-                      <Text numberOfLines={1} opacity={70}>
-                        {item.description}
-                      </Text>
-                    )}
-                  </VStack>
-                  <VStack>
-                    <Text bold>{formatToCurrency(item.amount)}</Text>
-                    <Text alignSelf="flex-end" opacity={70}>
-                      {moment(item.date).format(moment.HTML5_FMT.TIME)}
-                    </Text>
-                  </VStack>
-                </HStack>
-              </VStack>
-            </HStack>
-          </Pressable>
-        )}
+        renderItem={info => <TransactionCard {...info} />}
         showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={Divider}
         keyExtractor={item => String(item.id)}
+        contentContainerStyle={sections.length === 0 && styles.contentContainer}
+        ListEmptyComponent={() =>
+          !isRefreshing && (
+            <Center flex={1} px={5}>
+              <Icon
+                as={MaterialCommunityIcons}
+                name="cash-remove"
+                size="6xl"
+                _dark={{ color: "gray.200" }}
+                _light={{ color: "gray.600" }}
+              />
+              <Text bold fontSize="lg" textAlign="center">
+                No se ha encontrado ninguna transacción
+              </Text>
+            </Center>
+          )
+        }
       />
     </Container>
   );

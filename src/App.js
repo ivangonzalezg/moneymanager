@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar } from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -14,6 +14,7 @@ import {
 import constants from "./constants";
 import colors from "./constants/colors";
 import routes from "./routes";
+import database from "./database";
 
 import HomeScreen from "./screens/home";
 import TransactionScreen from "./screens/transaction";
@@ -47,6 +48,10 @@ const App = () => {
     }),
     [state],
   );
+
+  useEffect(() => {
+    database.configure().then(() => dispatchState({ type: TRANSACTIONS }));
+  }, []);
 
   return (
     <NavigationContainer

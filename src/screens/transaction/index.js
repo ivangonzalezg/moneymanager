@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import {
   Actionsheet,
@@ -29,6 +29,8 @@ import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
 import categories from "../../constants/categories";
 import { formatDate, formatToCurrency } from "../../utils";
+import database from "../../database";
+import { StateContext } from "../../contexts";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
@@ -56,17 +58,19 @@ const keyboard = [
   ],
 ];
 
-const TransactionScreen = () => {
+const TransactionScreen = props => {
+  const { navigation } = props;
   const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
+  const { updateTransactions } = useContext(StateContext);
   const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState(categories.home);
+  const [category, setCategory] = useState(categories[0]);
   const {
     isOpen: isCategoryList,
     onOpen: onOpenCategoryList,
     onClose: onCloseCategoryList,
   } = useDisclose();
-  const [date, setDate] = useState(moment().toDate());
+  const [date, setDate] = useState(moment().startOf("hour").toDate());
   const {
     isOpen: isDatePicker,
     onOpen: onOpenDatePicker,
@@ -97,6 +101,19 @@ const TransactionScreen = () => {
     [amount],
   );
 
+  const onSave = async () => {
+    try {
+      database.createTransaction({
+        amount,
+        category_id: category.id,
+        date: date.toISOString(),
+        description,
+      });
+      updateTransactions();
+      navigation.goBack();
+    } catch (_) {}
+  };
+
   return (
     <Container noScroll>
       <HStack alignItems="center">
@@ -126,7 +143,9 @@ const TransactionScreen = () => {
           variant="unstyled"
           borderRadius="3xl"
           _light={{ bg: "muted.900", _text: { color: "muted.50" } }}
-          _dark={{ bg: "muted.50", _text: { color: "muted.900" } }}>
+          _dark={{ bg: "muted.50", _text: { color: "muted.900" } }}
+          disabled={!amount}
+          onPress={onSave}>
           Guardar
         </Button>
       </HStack>
@@ -143,12 +162,9 @@ const TransactionScreen = () => {
           pr={2}
           onPress={onOpenCategoryList}>
           <HStack alignItems="center" space={2}>
-            <SimpleEmoji
-              shortName={category.categoryIcon}
-              style={styles.icon}
-            />
+            <SimpleEmoji shortName={category.icon} style={styles.icon} />
             <Text flex={1} fontSize="md" numberOfLines={1}>
-              {category.categoryName}
+              {category.name}
             </Text>
             <Icon
               as={MaterialCommunityIcons}
@@ -202,6 +218,7 @@ const TransactionScreen = () => {
         title="Seleccione una fecha y hora"
         confirmText="Confirmar"
         cancelText="Cancelar"
+        minuteInterval={5}
         open={isDatePicker}
         date={date}
         onConfirm={_date => {
@@ -215,7 +232,7 @@ const TransactionScreen = () => {
         <Actionsheet.Content>
           <FlatList
             w="100%"
-            data={Object.values(categories).sort((a, b) => a.order - b.order)}
+            data={categories.sort((a, b) => a.order - b.order)}
             renderItem={({ item }) => (
               <Actionsheet.Item
                 isFocused={item.id === category.id}
@@ -233,12 +250,9 @@ const TransactionScreen = () => {
                   onCloseCategoryList();
                 }}>
                 <HStack alignItems="center" space={2}>
-                  <SimpleEmoji
-                    shortName={item.categoryIcon}
-                    style={styles.icon}
-                  />
+                  <SimpleEmoji shortName={item.icon} style={styles.icon} />
                   <Text fontSize="md" numberOfLines={1}>
-                    {item.categoryName}
+                    {item.name}
                   </Text>
                 </HStack>
               </Actionsheet.Item>

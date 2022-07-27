@@ -1,94 +1,94 @@
-const categories = {
-  home: {
+const categories = [
+  {
     id: 1,
     order: 1,
-    categoryName: "Hogar",
-    categoryIcon: "house",
+    name: "Alimentación",
+    icon: "fork_and_knife",
   },
-  transportation: {
+  {
     id: 2,
     order: 2,
-    categoryName: "Transporte",
-    categoryIcon: "car",
+    name: "Transporte",
+    icon: "car",
   },
-  feeding: {
+  {
     id: 3,
     order: 3,
-    categoryName: "Alimentación",
-    categoryIcon: "fork_and_knife",
+    name: "Hogar",
+    icon: "house",
   },
-  fashion: {
+  {
     id: 4,
     order: 4,
-    categoryName: "Moda",
-    categoryIcon: "shirt",
+    name: "Moda",
+    icon: "shirt",
   },
-  healthAndWellness: {
+  {
     id: 5,
     order: 5,
-    categoryName: "Salud y bienestar",
-    categoryIcon: "stethoscope",
+    name: "Salud y bienestar",
+    icon: "stethoscope",
   },
-  entertainment: {
+  {
     id: 6,
     order: 6,
-    categoryName: "Entretenimiento",
-    categoryIcon: "film_frames",
+    name: "Entretenimiento",
+    icon: "film_frames",
   },
-  pets: {
+  {
     id: 7,
     order: 7,
-    categoryName: "Mascotas",
-    categoryIcon: "feet",
+    name: "Mascotas",
+    icon: "feet",
   },
-  travel: {
+  {
     id: 8,
     order: 8,
-    categoryName: "Viaies",
-    categoryIcon: "airplane",
+    name: "Viaies",
+    icon: "airplane",
   },
-  technology: {
+  {
     id: 9,
     order: 9,
-    categoryName: "Tecnología",
-    categoryIcon: "computer",
+    name: "Tecnología",
+    icon: "computer",
   },
-  education: {
+  {
     id: 10,
     order: 10,
-    categoryName: "Educación",
-    categoryIcon: "closed_book",
+    name: "Educación",
+    icon: "closed_book",
   },
-  taxes: {
+  {
     id: 11,
     order: 11,
-    categoryName: "Impuestos",
-    categoryIcon: "money_with_wings",
+    name: "Impuestos",
+    icon: "money_with_wings",
   },
-  insurance: {
+  {
     id: 12,
     order: 12,
-    categoryName: "Seguros",
-    categoryIcon: "umbrella",
+    name: "Seguros",
+    icon: "umbrella",
   },
-  bankCommitments: {
+  {
     id: 13,
     order: 13,
-    categoryName: "Compromisos bancarios",
-    categoryIcon: "moneybag",
+    name: "Compromisos bancarios",
+    icon: "moneybag",
   },
-  myBusiness: {
+  {
     id: 14,
     order: 14,
-    categoryName: "Mi negocio",
-    categoryIcon: "office",
+    name: "Mi negocio",
+    icon: "office",
   },
-  others: {
+  {
     id: 15,
     order: 15,
-    categoryName: "Otros",
-    categoryIcon: "package",
+    name: "Otros",
+    icon: "package",
   },
-};
+];
 
 export default categories;

@@ -21,6 +21,7 @@ const Root = () => {
           Pressable: {
             defaultProps: {
               _pressed: { opacity: 0.7 },
+              _disabled: { opacity: 0.5 },
             },
           },
         },
