@@ -160,7 +160,7 @@ const TransactionScreen = props => {
   };
 
   return (
-    <Container noScroll>
+    <Container noScroll disableKeyboardAvoiding>
       <HStack alignItems="center">
         <BackButton />
         <Heading flex={1} textAlign="center">

@@ -16,6 +16,10 @@ interface ContainerProps {
    * The default value is `false`.
    */
   disableFeedback?: boolean;
+  /**
+   * The default value is `false`.
+   */
+   disableKeyboardAvoiding?: boolean;
 }
 
 declare var Container: typeof ContainerType;
