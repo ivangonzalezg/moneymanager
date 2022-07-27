@@ -1,8 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Dimensions } from "react-native";
+import { Animated, Dimensions } from "react-native";
 import {
   Actionsheet,
-  Box,
   Button,
   Center,
   Divider,
@@ -23,6 +22,7 @@ import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
 import useKeyboardHeight from "react-native-use-keyboard-height";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import styles from "./styles";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
@@ -65,6 +65,7 @@ const TransactionScreen = props => {
   } = props;
   const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
+  const insets = useSafeAreaInsets();
   const { updateTransactions } = useContext(StateContext);
   const [amount, setAmount] = useState(params.amount || 0);
   const [category, setCategory] = useState(
@@ -86,6 +87,7 @@ const TransactionScreen = props => {
     onClose: onCloseDatePicker,
   } = useDisclose();
   const [description, setDescription] = useState(params.description || "");
+  const [animatedHeight] = useState(new Animated.Value(0));
 
   useEffect(() => {
     RNAndroidKeyboardAdjust.setAdjustPan();
@@ -93,6 +95,17 @@ const TransactionScreen = props => {
       RNAndroidKeyboardAdjust.setAdjustResize();
     };
   }, []);
+
+  useEffect(() => {
+    Animated.timing(animatedHeight, {
+      toValue:
+        virtualKeyboardHeight < keyboardHeight
+          ? keyboardHeight - virtualKeyboardHeight - insets.bottom + 12
+          : 0,
+      useNativeDriver: false,
+      duration: 300,
+    }).start();
+  }, [keyboardHeight, insets]);
 
   const onPress = useCallback(
     (value = "") => {
@@ -191,12 +204,10 @@ const TransactionScreen = props => {
         </Pressable>
       </HStack>
       <Divider />
-      <Box
-        h={`${
-          virtualKeyboardHeight < keyboardHeight
-            ? keyboardHeight - virtualKeyboardHeight
-            : 0
-        }px`}
+      <Animated.View
+        style={{
+          height: animatedHeight,
+        }}
       />
       <VirtualKeyboard
         amount={amount}

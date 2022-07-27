@@ -17,7 +17,6 @@ const Container = props => {
       disabled={disableFeedback}>
       <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
         <Box
-          _android={{ pb: 3 }}
           _dark={{ bg: "blueGray.900" }}
           _light={{ bg: "blueGray.50" }}
           flex={1}
