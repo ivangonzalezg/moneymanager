@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Animated, Dimensions } from "react-native";
 import {
   Actionsheet,
@@ -63,6 +69,7 @@ const TransactionScreen = props => {
     navigation,
     route: { params },
   } = props;
+  const descriptionInput = useRef();
   const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
   const insets = useSafeAreaInsets();
@@ -106,6 +113,15 @@ const TransactionScreen = props => {
       duration: 300,
     }).start();
   }, [keyboardHeight, insets]);
+
+  useEffect(() => {
+    if (
+      (isCategoryList || isDatePicker) &&
+      descriptionInput.current.isFocused()
+    ) {
+      descriptionInput.current.blur();
+    }
+  }, [isCategoryList, isDatePicker]);
 
   const onPress = useCallback(
     (value = "") => {
@@ -155,6 +171,7 @@ const TransactionScreen = props => {
       </Center>
       <HStack alignItems="flex-end" space={3}>
         <Input
+          ref={descriptionInput}
           flex={1}
           autoCapitalize="sentences"
           placeholder="Añade una descripción"
