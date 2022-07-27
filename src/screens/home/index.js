@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { RefreshControl } from "react-native";
 import {
   Box,
   Center,
@@ -95,6 +96,7 @@ const HomeScreen = props => {
         </VStack>
       </HStack>
       <SectionList
+        refreshControl={<RefreshControl refreshing={isRefreshing} />}
         ListHeaderComponent={() => (
           <Center mt={10}>
             <Text opacity={70}>Gastado este mes</Text>
