@@ -94,6 +94,7 @@ const TransactionScreen = props => {
     onClose: onCloseDatePicker,
   } = useDisclose();
   const [description, setDescription] = useState(params.description || "");
+  const [isSaving, setIsSaving] = useState(false);
   const [animatedHeight] = useState(new Animated.Value(0));
 
   useEffect(() => {
@@ -141,6 +142,7 @@ const TransactionScreen = props => {
 
   const onSave = async () => {
     try {
+      setIsSaving(true);
       const data = {
         amount,
         category_id: category.id,
@@ -188,7 +190,7 @@ const TransactionScreen = props => {
           borderRadius="3xl"
           _light={{ bg: "muted.900", _text: { color: "muted.50" } }}
           _dark={{ bg: "muted.50", _text: { color: "muted.900" } }}
-          disabled={!amount}
+          disabled={!amount || isSaving}
           onPress={onSave}>
           Guardar
         </Button>
