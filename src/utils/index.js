@@ -5,13 +5,10 @@ import categories from "../constants/categories";
 
 const is24Hour = RNLocalize.uses24HourClock();
 
-const formatToCurrency = (number = 0) => {
-  return numbro(Math.ceil(Number(number))).format({
-    output: "currency",
+const formatToCurrency = (number = 0) =>
+  numbro(Math.ceil(Number(number))).formatCurrency({
     thousandSeparated: true,
-    spaceSeparated: true,
   });
-};
 
 const capitalize = (string = "") =>
   `${string[0].toUpperCase()}${string.slice(1).toLowerCase()}`;
