@@ -12,6 +12,10 @@ interface ContainerProps {
    * The default value is `false`.
    */
   noPadding?: boolean;
+  /**
+   * The default value is `false`.
+   */
+  disableFeedback?: boolean;
 }
 
 declare var Container: typeof ContainerType;

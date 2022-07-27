@@ -48,7 +48,7 @@ const HomeScreen = props => {
   }, [state.transactions]);
 
   return (
-    <Container noScroll>
+    <Container noScroll disableFeedback>
       <HStack
         _android={{ mt: 3 }}
         _ios={{ mt: 1 }}

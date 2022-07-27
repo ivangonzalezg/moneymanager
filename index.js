@@ -20,8 +20,8 @@ const Root = () => {
         components: {
           Pressable: {
             defaultProps: {
-              _pressed: { opacity: 0.7 },
-              _disabled: { opacity: 0.5 },
+              _pressed: { opacity: 70 },
+              _disabled: { opacity: 50 },
             },
           },
         },

@@ -6,12 +6,15 @@ import { Box } from "native-base";
 import styles from "./styles";
 
 const Container = props => {
-  const { children, noScroll, noPadding } = props;
+  const { children, noScroll, noPadding, disableFeedback } = props;
 
   const Wrapper = noScroll ? View : KeyboardAwareScrollView;
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+    <TouchableWithoutFeedback
+      onPress={Keyboard.dismiss}
+      accessible={false}
+      disabled={disableFeedback}>
       <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
         <Box
           _android={{ pb: 3 }}
@@ -32,9 +35,11 @@ Container.propTypes = {
   children: PropTypes.node.isRequired,
   noScroll: PropTypes.bool,
   noPadding: PropTypes.bool,
+  disableFeedback: PropTypes.bool,
 };
 
 Container.defaultProps = {
   noScroll: false,
   noPadding: false,
+  disableFeedback: false,
 };
