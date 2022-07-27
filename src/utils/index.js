@@ -16,7 +16,12 @@ const capitalize = (string = "") =>
 const isSameDate = (a = moment(), b = moment()) =>
   a.format(moment.HTML5_FMT.DATE) === b.format(moment.HTML5_FMT.DATE);
 
-const formatDate = (dateTime = moment(), includeTime = true) => {
+const formatDate = (
+  dateTime = moment(),
+  includeTime = true,
+  includeDay = false,
+) => {
+  const day = dateTime.format("dddd");
   const hour = dateTime.hour();
   const isToday = isSameDate(dateTime, moment());
   const isYesterday = isSameDate(dateTime, moment().subtract(1, "day"));
@@ -27,7 +32,9 @@ const formatDate = (dateTime = moment(), includeTime = true) => {
     : `${dateTime.format("MMM D").replace(/\./, "")}${
         includeTime ? ` a la${hour !== 1 ? "s" : ""}` : ""
       }`;
-  return `${capitalize(date)}${
+  return `${
+    includeDay && !isToday && !isYesterday ? `${capitalize(day)}, ` : ""
+  }${capitalize(date)}${
     includeTime ? dateTime.format(is24Hour ? " H:mm" : " h:mm A") : ""
   }`;
 };
@@ -42,7 +49,7 @@ const transformTransactionsIntoSections = (transactions = []) => {
     .map(transaction => moment(transaction.date).format(moment.HTML5_FMT.DATE))
     .filter((thing, index, self) => index === self.findIndex(t => t === thing));
   return dates.map(date => ({
-    title: formatDate(moment(date), false),
+    title: formatDate(moment(date), false, true),
     total: transactions
       .filter(
         transaction =>
