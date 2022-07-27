@@ -108,12 +108,8 @@ const HomeScreen = props => {
             _dark={{ bg: "blueGray.900" }}
             _light={{ bg: "blueGray.50" }}>
             <HStack justifyContent="space-between" alignItems="center">
-              <Text bold opacity={70}>
-                {section.title}
-              </Text>
-              <Text bold opacity={70}>
-                {formatToCurrency(section.total)}
-              </Text>
+              <Text opacity={70}>{section.title}</Text>
+              <Text opacity={70}>{formatToCurrency(section.total)}</Text>
             </HStack>
             <Divider mt={2} />
           </Box>
