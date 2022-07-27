@@ -83,6 +83,7 @@ const App = () => {
               <Stack.Screen
                 name={routes.transaction}
                 component={TransactionScreen}
+                initialParams={{}}
               />
             </Stack.Navigator>
           </Box>

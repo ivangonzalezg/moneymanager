@@ -28,7 +28,7 @@ import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
 import categories from "../../constants/categories";
-import { formatDate, formatToCurrency } from "../../utils";
+import { formatDate, formatToCurrency, getCategory } from "../../utils";
 import database from "../../database";
 import { StateContext } from "../../contexts";
 
@@ -59,24 +59,33 @@ const keyboard = [
 ];
 
 const TransactionScreen = props => {
-  const { navigation } = props;
+  const {
+    navigation,
+    route: { params },
+  } = props;
   const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
   const { updateTransactions } = useContext(StateContext);
-  const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState(categories[0]);
+  const [amount, setAmount] = useState(params.amount || 0);
+  const [category, setCategory] = useState(
+    getCategory(params?.category_id) || categories[0],
+  );
   const {
     isOpen: isCategoryList,
     onOpen: onOpenCategoryList,
     onClose: onCloseCategoryList,
   } = useDisclose();
-  const [date, setDate] = useState(moment().startOf("hour").toDate());
+  const [date, setDate] = useState(
+    moment(params.date)
+      .startOf(!params.date && "hour")
+      .toDate(),
+  );
   const {
     isOpen: isDatePicker,
     onOpen: onOpenDatePicker,
     onClose: onCloseDatePicker,
   } = useDisclose();
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(params.description || "");
 
   useEffect(() => {
     RNAndroidKeyboardAdjust.setAdjustPan();
@@ -103,12 +112,17 @@ const TransactionScreen = props => {
 
   const onSave = async () => {
     try {
-      database.createTransaction({
+      const data = {
         amount,
         category_id: category.id,
         date: date.toISOString(),
         description,
-      });
+      };
+      if (params.id) {
+        await database.updateTransaction(params.id, data);
+      } else {
+        await database.createTransaction(data);
+      }
       updateTransactions();
       navigation.goBack();
     } catch (_) {}

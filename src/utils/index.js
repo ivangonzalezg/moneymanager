@@ -35,10 +35,10 @@ const formatDate = (dateTime = moment(), includeTime = true) => {
   }`;
 };
 
-const getCategory = id =>
+const getCategory = (id = 0) =>
   categories[
     Object.values(categories).findIndex(category => category.id === id)
-  ];
+  ] || null;
 
 const transformTransactionsIntoSections = (transactions = []) => {
   const dates = transactions

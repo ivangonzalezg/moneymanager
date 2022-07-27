@@ -14,7 +14,7 @@ const TransactionCard = props => {
   const category = getCategory(item.category_id);
 
   return (
-    <Pressable onPress={() => navigation.navigate(routes.transaction)}>
+    <Pressable onPress={() => navigation.navigate(routes.transaction, item)}>
       <HStack space={5} alignItems="center" my={2}>
         <SimpleEmoji shortName={category.icon} style={styles.icon} />
         <VStack flex={1}>

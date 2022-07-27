@@ -92,7 +92,9 @@ const getTransactions = () =>
 const getMonthExpenses = () =>
   new Promise(resolve =>
     executeSql(
-      `SELECT SUM(amount) AS total FROM transactions WHERE date >= "${moment()
+      `SELECT SUM(amount) AS total FROM ${
+        constants.tables.TRANSACTIONS
+      } WHERE date >= "${moment()
         .startOf("month")
         .toISOString()}" AND date <= "${moment()
         .endOf("month")
@@ -109,11 +111,24 @@ const getMonthExpenses = () =>
     ),
   );
 
+const updateTransaction = (id = 0, data = {}) =>
+  new Promise(resolve =>
+    executeSql(
+      `UPDATE ${constants.tables.TRANSACTIONS} SET ${Object.keys(data)
+        .map(key => `${key} = "${data[key]}"`)
+        .join(", ")} WHERE id = ${id}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
   getTransactions,
   getMonthExpenses,
+  updateTransaction,
 };
 
 export default database;
