@@ -1,6 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Keyboard,
+  Platform,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "@codler/react-native-keyboard-aware-scroll-view";
 import { Box, KeyboardAvoidingView } from "native-base";
 import styles from "./styles";
@@ -16,7 +21,10 @@ const Container = props => {
 
   const Wrapper = noScroll ? View : KeyboardAwareScrollView;
 
-  const KeyboardAvoiding = disableKeyboardAvoiding ? Box : KeyboardAvoidingView;
+  const KeyboardAvoiding =
+    disableKeyboardAvoiding || Platform.OS === "android"
+      ? Box
+      : KeyboardAvoidingView;
 
   return (
     <TouchableWithoutFeedback
