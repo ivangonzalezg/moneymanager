@@ -63,10 +63,17 @@ const transformTransactionsIntoSections = (transactions = []) => {
   }));
 };
 
+const populatingTransactions = transactions =>
+  transactions.map(transaction => ({
+    ...transaction,
+    category: getCategory(transaction.category_id),
+  }));
+
 export {
   formatToCurrency,
   formatDate,
   is24Hour,
   getCategory,
   transformTransactionsIntoSections,
+  populatingTransactions,
 };
