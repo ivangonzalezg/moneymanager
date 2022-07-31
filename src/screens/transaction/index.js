@@ -22,7 +22,7 @@ import {
   useDisclose,
 } from "native-base";
 import { VirtualKeyboard as RNVirtualKeyboard } from "react-native-screen-keyboard";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import SimpleEmoji from "simple-react-native-emoji";
 import moment from "moment";
 import DatePicker from "react-native-date-picker";
@@ -55,8 +55,8 @@ const keyboard = [
     null,
     0,
     <Icon
-      as={MaterialCommunityIcons}
-      name="backspace-outline"
+      as={Feather}
+      name="delete"
       size={25}
       _light={{ color: colors.muted[900] }}
       _dark={{ color: colors.muted[50] }}
@@ -213,7 +213,7 @@ const TransactionScreen = props => {
               {category.name}
             </Text>
             <Icon
-              as={MaterialCommunityIcons}
+              as={Feather}
               name="chevron-down"
               size={25}
               _light={{ color: colors.muted[900] }}

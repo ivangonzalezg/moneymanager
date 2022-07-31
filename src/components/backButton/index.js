@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Icon, IconButton } from "native-base";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import colors from "../../constants/colors";
 import { useNavigation } from "@react-navigation/native";
 
@@ -16,7 +16,7 @@ const BackButton = ({ hidden }) => {
       variant="unstyled"
       icon={
         <Icon
-          as={MaterialCommunityIcons}
+          as={Feather}
           name="arrow-left"
           size="xl"
           _light={{ color: hidden ? colors.transparent : colors.muted[900] }}

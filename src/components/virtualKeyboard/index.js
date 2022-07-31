@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Button, HStack, Icon, Text, VStack } from "native-base";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import colors from "../../constants/colors";
 
 const KeyboardKey = ({ value, onPress, children }) => (
@@ -55,8 +55,8 @@ const VirtualKeyboard = props => {
         <KeyboardKey value={0} onPress={onPress} />
         <KeyboardKey onPress={() => onPress("", true)}>
           <Icon
-            as={MaterialCommunityIcons}
-            name="backspace-outline"
+            as={Feather}
+            name="delete"
             size={25}
             _light={{ color: colors.muted[900] }}
             _dark={{ color: colors.muted[50] }}

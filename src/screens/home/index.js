@@ -15,6 +15,7 @@ import {
   VStack,
 } from "native-base";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
@@ -97,8 +98,8 @@ const HomeScreen = props => {
           onSubmitEditing={() => filterTransactions(query)}
           InputLeftElement={
             <Icon
-              as={MaterialCommunityIcons}
-              name="magnify"
+              as={Feather}
+              name="search"
               my={2}
               ml={2}
               size={6}
@@ -114,8 +115,8 @@ const HomeScreen = props => {
                   filterTransactions();
                 }}>
                 <Icon
-                  as={MaterialCommunityIcons}
-                  name="close"
+                  as={Feather}
+                  name="x"
                   my={2}
                   mx={1}
                   size={6}
@@ -136,7 +137,7 @@ const HomeScreen = props => {
             colorScheme="muted"
             icon={
               <Icon
-                as={MaterialCommunityIcons}
+                as={Feather}
                 name="plus"
                 size="xl"
                 _light={{ color: colors.muted[100] }}
