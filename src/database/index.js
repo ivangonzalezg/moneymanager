@@ -123,12 +123,23 @@ const updateTransaction = (id = 0, data = {}) =>
     ),
   );
 
+const deleteTransaction = (id = 0) =>
+  new Promise(resolve =>
+    executeSql(
+      `DELETE FROM ${constants.tables.TRANSACTIONS} WHERE id = ${id}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
   getTransactions,
   getMonthExpenses,
   updateTransaction,
+  deleteTransaction,
 };
 
 export default database;

@@ -15,6 +15,7 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Input,
   Pressable,
   Text,
@@ -159,6 +160,14 @@ const TransactionScreen = props => {
     } catch (_) {}
   };
 
+  const onDelete = async () => {
+    try {
+      await database.deleteTransaction(params.id);
+      updateTransactions();
+      navigation.goBack();
+    } catch (_) {}
+  };
+
   return (
     <Container noScroll disableKeyboardAvoiding>
       <HStack alignItems="center">
@@ -166,7 +175,26 @@ const TransactionScreen = props => {
         <Heading flex={1} textAlign="center">
           Gastos
         </Heading>
-        <BackButton hidden />
+        {params.id ? (
+          <IconButton
+            py={1}
+            pl={1}
+            pr={0}
+            variant="unstyled"
+            icon={
+              <Icon
+                as={Feather}
+                name="trash"
+                size="lg"
+                _light={{ color: colors.muted[900] }}
+                _dark={{ color: colors.muted[50] }}
+              />
+            }
+            onPress={onDelete}
+          />
+        ) : (
+          <BackButton hidden />
+        )}
       </HStack>
       <Center flex={1} alignItems="center">
         <Heading fontSize="4xl">{formatToCurrency(amount)}</Heading>
