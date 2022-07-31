@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useReducer } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar } from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import SplashScreen from "react-native-splash-screen";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -51,6 +52,7 @@ const App = () => {
 
   useEffect(() => {
     database.configure().then(() => dispatchState({ type: TRANSACTIONS }));
+    SplashScreen.hide();
   }, []);
 
   return (

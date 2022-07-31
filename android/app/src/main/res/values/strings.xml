@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">moneymanager</string>
+    <string name="app_name">Money Manager</string>
+    <string name="app_label">Powered by React Native</string>
 </resources>

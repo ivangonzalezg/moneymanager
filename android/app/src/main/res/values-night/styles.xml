@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:textColor">#FAFAFA</item>
         <item name="colorAccent">#FAFAFA</item>
+        <item name="android:windowBackground">#0F172A</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">#0F172A</item>
     </style>
 
 </resources>
