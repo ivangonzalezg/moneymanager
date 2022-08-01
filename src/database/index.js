@@ -76,7 +76,7 @@ const createTransaction = (data = {}) =>
 const getTransactions = () =>
   new Promise(resolve =>
     executeSql(
-      `SELECT * FROM ${constants.tables.TRANSACTIONS} ORDER BY date DESC`,
+      `SELECT * FROM ${constants.tables.TRANSACTIONS} ORDER BY date DESC, id DESC`,
       [],
       (_, results) => {
         const data = [];
