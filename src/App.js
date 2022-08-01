@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useReducer } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { useColorMode, Box, StatusBar } from "native-base";
+import { useColorMode, Box, StatusBar, Icon } from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "react-native-splash-screen";
+import Feather from "react-native-vector-icons/Feather";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -21,9 +23,43 @@ import HomeScreen from "./screens/home";
 import TransactionScreen from "./screens/transaction";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const { VISIBLE, HIDDEN } = constants.progress;
 const { TRANSACTIONS } = constants.state;
+
+const Tabs = () => {
+  const { colorMode } = useColorMode();
+
+  return (
+    <Tab.Navigator
+      backBehavior="history"
+      initialRouteName={routes.home}
+      screenOptions={{
+        headerShown: false,
+        tabBarHideOnKeyboard: true,
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor:
+            colorMode === "light" ? colors.blueGray[200] : colors.blueGray[700],
+        },
+        tabBarActiveTintColor:
+          colorMode === "light" ? colors.muted[700] : colors.muted[200],
+        tabBarInactiveTintColor:
+          colorMode === "light" ? colors.muted[300] : colors.muted[900],
+      }}>
+      <Tab.Screen
+        name={routes.home}
+        component={HomeScreen}
+        options={{
+          tabBarIcon: props => (
+            <Icon as={Feather} name="inbox" size="xl" {...props} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
 const App = () => {
   const { colorMode } = useColorMode();
@@ -66,8 +102,7 @@ const App = () => {
           <Box
             _dark={{ bg: "blueGray.900" }}
             _light={{ bg: "blueGray.50" }}
-            flex={1}
-            safeArea>
+            flex={1}>
             <StatusBar
               backgroundColor={
                 colorMode === "light"
@@ -80,8 +115,8 @@ const App = () => {
             />
             <Stack.Navigator
               screenOptions={{ headerShown: false }}
-              initialRouteName={routes.home}>
-              <Stack.Screen name={routes.home} component={HomeScreen} />
+              initialRouteName={routes.tabs}>
+              <Stack.Screen name={routes.tabs} component={Tabs} />
               <Stack.Screen
                 name={routes.transaction}
                 component={TransactionScreen}

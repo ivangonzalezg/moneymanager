@@ -79,7 +79,7 @@ const HomeScreen = props => {
   );
 
   return (
-    <Container noScroll disableFeedback>
+    <Container noScroll disableFeedback safeAreaTop>
       <HStack
         _android={{ mt: 3 }}
         _ios={{ mt: 1 }}
