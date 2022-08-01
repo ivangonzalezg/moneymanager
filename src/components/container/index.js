@@ -17,6 +17,8 @@ const Container = props => {
     noPadding,
     disableFeedback,
     disableKeyboardAvoiding,
+    safeAreaTop,
+    safeAreaBottom,
   } = props;
 
   const Wrapper = noScroll ? View : KeyboardAwareScrollView;
@@ -37,7 +39,9 @@ const Container = props => {
             _dark={{ bg: "blueGray.900" }}
             _light={{ bg: "blueGray.50" }}
             flex={1}
-            px={noPadding ? 0 : 5}>
+            px={noPadding ? 0 : 5}
+            safeAreaTop={safeAreaTop ? true : 0}
+            safeAreaBottom={safeAreaBottom ? true : 0}>
             {children}
           </Box>
         </Wrapper>
@@ -54,6 +58,8 @@ Container.propTypes = {
   noPadding: PropTypes.bool,
   disableFeedback: PropTypes.bool,
   disableKeyboardAvoiding: PropTypes.bool,
+  safeAreaTop: PropTypes.bool,
+  safeAreaBottom: PropTypes.bool,
 };
 
 Container.defaultProps = {
@@ -61,4 +67,6 @@ Container.defaultProps = {
   noPadding: false,
   disableFeedback: false,
   disableKeyboardAvoiding: false,
+  safeAreaTop: false,
+  safeAreaBottom: false,
 };

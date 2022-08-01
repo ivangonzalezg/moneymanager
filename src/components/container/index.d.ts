@@ -19,7 +19,15 @@ interface ContainerProps {
   /**
    * The default value is `false`.
    */
-   disableKeyboardAvoiding?: boolean;
+  disableKeyboardAvoiding?: boolean;
+  /**
+   * The default value is `false`.
+   */
+  safeAreaTop?: boolean;
+  /**
+   * The default value is `false`.
+   */
+  safeAreaBottom?: boolean;
 }
 
 declare var Container: typeof ContainerType;
