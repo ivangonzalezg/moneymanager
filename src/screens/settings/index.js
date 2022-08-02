@@ -17,7 +17,14 @@ import { openUrl } from "../../utils";
 import Br from "../../components/br";
 
 const ButtonItem = React.memo(props => {
-  const { label, icon, onPress, borderTopRadius, borderBottomRadius } = props;
+  const {
+    label,
+    icon,
+    onPress,
+    borderTopRadius,
+    borderBottomRadius,
+    disabled,
+  } = props;
 
   return (
     <Pressable
@@ -25,6 +32,7 @@ const ButtonItem = React.memo(props => {
       borderTopRadius={borderTopRadius ? "xl" : "none"}
       borderBottomRadius={borderBottomRadius ? "xl" : "none"}
       onPress={onPress}
+      disabled={disabled}
       _light={{ bg: colors.blueGray[200] }}
       _dark={{ bg: colors.blueGray[800] }}>
       <HStack space={5} minH="60px" alignItems="center">
@@ -66,6 +74,7 @@ const Settings = () => {
         label="Notificaciones"
         icon="bell"
         onPress={() => {}}
+        disabled
       />
       <Br />
       <ButtonItem
