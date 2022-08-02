@@ -21,7 +21,6 @@ import Container from "../../components/container";
 import {
   formatToCurrency,
   transformTransactionsIntoSections,
-  populatingTransactions,
 } from "../../utils";
 import routes from "../../routes";
 import { StateContext } from "../../contexts";
@@ -42,8 +41,7 @@ const HomeScreen = props => {
       setIsRefreshing(true);
       const _monthExpenses = await database.getMonthExpenses();
       setMonthExpenses(_monthExpenses);
-      let _transactions = await database.getTransactions();
-      _transactions = populatingTransactions(_transactions);
+      const _transactions = await database.getTransactions();
       setTransactions(_transactions);
       setSections(transformTransactionsIntoSections(_transactions));
     } catch (_) {}
@@ -63,7 +61,7 @@ const HomeScreen = props => {
                 transaction =>
                   (Number.isInteger(Number(_query)) &&
                     transaction.amount === Number(_query)) ||
-                  transaction.category.name
+                  transaction.categoryName
                     .toLowerCase()
                     .includes(_query.toLowerCase()) ||
                   transaction.description

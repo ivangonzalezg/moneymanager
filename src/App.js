@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "react-native-splash-screen";
 import Feather from "react-native-vector-icons/Feather";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -29,7 +30,8 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const { VISIBLE, HIDDEN } = constants.progress;
-const { TRANSACTIONS } = constants.state;
+const { TRANSACTIONS, CATEGORY, CATEGORIES } = constants.state;
+const { LAST_CATEGORY } = constants.storage;
 
 const Tabs = () => {
   const { colorMode } = useColorMode();
@@ -104,14 +106,35 @@ const App = () => {
   const stateContext = useMemo(
     () => ({
       updateTransactions: () => dispatchState({ type: TRANSACTIONS }),
+      updateCategory: category => dispatchState({ type: CATEGORY, category }),
+      updateCategories: categories =>
+        dispatchState({ type: CATEGORIES, categories }),
       ...state,
     }),
     [state],
   );
 
+  const initializeApp = async () => {
+    try {
+      SplashScreen.hide();
+      await database.configure();
+      dispatchState({ type: TRANSACTIONS });
+      await database.createCategories();
+      const categories = await database.getCategories();
+      dispatchState({ type: CATEGORIES, categories });
+      const last_category = await AsyncStorage.getItem(LAST_CATEGORY);
+      if (last_category) {
+        dispatchState({ type: CATEGORY, category: JSON.parse(last_category) });
+      } else {
+        dispatchState({ type: CATEGORY, category: categories[0] });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    database.configure().then(() => dispatchState({ type: TRANSACTIONS }));
-    SplashScreen.hide();
+    initializeApp();
   }, []);
 
   return (

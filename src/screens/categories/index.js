@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -14,13 +14,17 @@ import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import BackButton from "../../components/backButton";
 import Container from "../../components/container";
-import categories from "../../constants/categories";
 import SimpleEmoji from "simple-react-native-emoji";
 import colors from "../../constants/colors";
 import Br from "../../components/br";
+import { StateContext } from "../../contexts/state";
 
 const Categories = () => {
-  const [data, setData] = useState(categories);
+  const state = useContext(StateContext);
+  const [categories, setCategories] = useState(state.categories);
+
+  const hasChanged =
+    JSON.stringify(state.categories) === JSON.stringify(categories);
 
   return (
     <Container noScroll disableFeedback safeAreaTop safeAreaBottom>
@@ -33,7 +37,7 @@ const Categories = () => {
       </HStack>
       <Box flex={1} borderRadius="xl" overflow="hidden">
         <DraggableFlatList
-          data={data}
+          data={categories}
           renderItem={({ item, drag, isActive, index }) => (
             <HStack
               px={3}
@@ -58,7 +62,7 @@ const Categories = () => {
             </HStack>
           )}
           showsVerticalScrollIndicator={false}
-          onDragEnd={({ data: _data }) => setData(_data)}
+          onDragEnd={({ data: _data }) => setCategories(_data)}
           keyExtractor={item => String(item.id)}
           ItemSeparatorComponent={() => <Br size={1} />}
           ListFooterComponent={() => (
@@ -79,7 +83,9 @@ const Categories = () => {
           )}
         />
       </Box>
-      <Button mt={5}>Guardar</Button>
+      <Button mt={5} disabled={hasChanged}>
+        Guardar
+      </Button>
     </Container>
   );
 };

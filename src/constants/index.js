@@ -5,9 +5,15 @@ const constants = {
   },
   state: {
     TRANSACTIONS: "transactions",
+    CATEGORY: "category",
+    CATEGORIES: "categories",
   },
   tables: {
     TRANSACTIONS: "transactions",
+    CATEGORIES: "categories",
+  },
+  storage: {
+    LAST_CATEGORY: "last_category",
   },
 };
 

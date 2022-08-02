@@ -30,14 +30,15 @@ import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
 import useKeyboardHeight from "react-native-use-keyboard-height";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "./styles";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
-import categories from "../../constants/categories";
 import { formatDate, formatToCurrency, getCategory } from "../../utils";
 import database from "../../database";
 import { StateContext } from "../../contexts";
+import constants from "../../constants";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
@@ -64,10 +65,10 @@ const TransactionScreen = props => {
   const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
   const insets = useSafeAreaInsets();
-  const { updateTransactions } = useContext(StateContext);
+  const state = useContext(StateContext);
   const [amount, setAmount] = useState(params.amount || 0);
   const [category, setCategory] = useState(
-    getCategory(params?.category_id) || categories[0],
+    getCategory(params?.category_id, state.categories) || state.category,
   );
   const {
     isOpen: isCategoryList,
@@ -145,7 +146,12 @@ const TransactionScreen = props => {
       } else {
         await database.createTransaction(data);
       }
-      updateTransactions();
+      await AsyncStorage.setItem(
+        constants.storage.LAST_CATEGORY,
+        JSON.stringify(category),
+      );
+      state.updateCategory(category);
+      state.updateTransactions();
       navigation.goBack();
     } catch (_) {}
   };
@@ -153,7 +159,7 @@ const TransactionScreen = props => {
   const onDelete = async () => {
     try {
       await database.deleteTransaction(params.id);
-      updateTransactions();
+      state.updateTransactions();
       navigation.goBack();
     } catch (_) {}
   };
@@ -273,7 +279,7 @@ const TransactionScreen = props => {
         <Actionsheet.Content>
           <FlatList
             w="100%"
-            data={categories.sort((a, b) => a.order - b.order)}
+            data={state.categories}
             renderItem={({ item }) => (
               <Actionsheet.Item
                 isFocused={item.id === category.id}

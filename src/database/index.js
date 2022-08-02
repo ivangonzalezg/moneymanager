@@ -1,6 +1,7 @@
 import SQLite from "react-native-sqlite-storage";
 import moment from "moment";
 import constants from "../constants";
+import categories from "./categories";
 
 const dbName = "moneymanager.db";
 
@@ -17,7 +18,10 @@ const createTable = (name = "", fields = []) =>
   new Promise((resolve, reject) =>
     db.transaction(tx => {
       tx.executeSql(
-        `CREATE TABLE IF NOT EXISTS ${name} (${fields.join(", ")})`,
+        `CREATE TABLE IF NOT EXISTS ${name} (${fields.join(
+          ", ",
+        )}, created_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ')), updated_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ'))
+        )`,
         [],
         resolve,
         reject,
@@ -37,8 +41,12 @@ const configure = async () => {
         "date DATETIME",
         "description TEXT",
         "is_income BOOLEAN DEFAULT 0",
-        "created_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ'))",
-        "updated_at DATETIME DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ'))",
+      ]),
+      createTable(constants.tables.CATEGORIES, [
+        "id INTEGER PRIMARY KEY",
+        "position INTEGER NOT NULL",
+        "name TEXT NOT NULL",
+        "icon TEXT NOT NULL",
       ]),
     ]);
   } catch (error) {
@@ -76,7 +84,7 @@ const createTransaction = (data = {}) =>
 const getTransactions = () =>
   new Promise(resolve =>
     executeSql(
-      `SELECT * FROM ${constants.tables.TRANSACTIONS} ORDER BY date DESC, id DESC`,
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN categories c ON t.category_id = c.id ORDER BY date DESC, id DESC`,
       [],
       (_, results) => {
         const data = [];
@@ -133,6 +141,39 @@ const deleteTransaction = (id = 0) =>
     ),
   );
 
+const createCategories = () =>
+  new Promise(resolve =>
+    executeSql(
+      `INSERT INTO ${
+        constants.tables.CATEGORIES
+      } (id,position,name,icon) VALUES ${categories
+        .map(
+          category =>
+            `(${category.id},${category.position},"${category.name}","${category.icon}")`,
+        )
+        .join(",")}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
+const getCategories = () =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT * FROM ${constants.tables.CATEGORIES} ORDER BY position ASC`,
+      [],
+      (_, results) => {
+        const data = [];
+        for (let i = 0; i < results.rows.length; i++) {
+          data.push(results.rows.item(i));
+        }
+        resolve(data);
+      },
+      () => resolve([]),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
@@ -140,6 +181,8 @@ const database = {
   getMonthExpenses,
   updateTransaction,
   deleteTransaction,
+  createCategories,
+  getCategories,
 };
 
 export default database;

@@ -14,11 +14,11 @@ const TransactionCard = props => {
   return (
     <Pressable onPress={() => navigation.navigate(routes.transaction, item)}>
       <HStack space={5} alignItems="center" my={2}>
-        <SimpleEmoji shortName={item.category.icon} style={styles.icon} />
+        <SimpleEmoji shortName={item.categoryIcon} style={styles.icon} />
         <VStack flex={1}>
           <HStack flex={1} space={2}>
             <VStack flex={1} justifyContent="center">
-              <Text bold>{item.category.name}</Text>
+              <Text bold>{item.categoryName}</Text>
               {Boolean(item.description) && (
                 <Text numberOfLines={1} opacity={70}>
                   {item.description}
