@@ -11,6 +11,7 @@ import {
 } from "native-base";
 import Feather from "react-native-vector-icons/Feather";
 import DeviceInfo from "react-native-device-info";
+import PushNotification from "react-native-push-notification";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
 import { openUrl } from "../../utils";
@@ -65,7 +66,14 @@ const Settings = () => {
         borderBottomRadius
         label="Notificaciones"
         icon="bell"
-        onPress={() => {}}
+        onPress={() =>
+          PushNotification.localNotificationSchedule({
+            channelId: "money-manager",
+            title: "Test",
+            message: new Date().toISOString(),
+            date: new Date(Date.now() + 30 * 1000),
+          })
+        }
       />
       <Br />
       <ButtonItem
