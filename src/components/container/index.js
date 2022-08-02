@@ -34,17 +34,17 @@ const Container = props => {
       accessible={false}
       disabled={disableFeedback}>
       <KeyboardAvoiding flex={1} behavior="height">
-        <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
-          <Box
-            _dark={{ bg: "blueGray.900" }}
-            _light={{ bg: "blueGray.50" }}
-            flex={1}
-            px={noPadding ? 0 : 5}
-            safeAreaTop={safeAreaTop ? true : 0}
-            safeAreaBottom={safeAreaBottom ? true : 0}>
+        <Box
+          _dark={{ bg: "blueGray.900" }}
+          _light={{ bg: "blueGray.50" }}
+          flex={1}
+          px={noPadding ? 0 : 5}
+          safeAreaTop={safeAreaTop ? true : 0}
+          safeAreaBottom={safeAreaBottom ? true : 0}>
+          <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
             {children}
-          </Box>
-        </Wrapper>
+          </Wrapper>
+        </Box>
       </KeyboardAvoiding>
     </TouchableWithoutFeedback>
   );

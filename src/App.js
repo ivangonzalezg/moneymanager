@@ -21,6 +21,8 @@ import database from "./database";
 
 import HomeScreen from "./screens/home";
 import TransactionScreen from "./screens/transaction";
+import ChartsScreen from "./screens/charts";
+import SettingsScreen from "./screens/settings";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -41,12 +43,14 @@ const Tabs = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor:
-            colorMode === "light" ? colors.blueGray[200] : colors.blueGray[700],
+            colorMode === "light" ? colors.blueGray[200] : colors.blueGray[800],
+          borderTopColor:
+            colorMode === "light" ? colors.blueGray[400] : colors.blueGray[400],
         },
         tabBarActiveTintColor:
-          colorMode === "light" ? colors.muted[700] : colors.muted[200],
+          colorMode === "light" ? colors.muted[800] : colors.muted[100],
         tabBarInactiveTintColor:
-          colorMode === "light" ? colors.muted[300] : colors.muted[900],
+          colorMode === "light" ? colors.muted[400] : colors.muted[600],
       }}>
       <Tab.Screen
         name={routes.home}
@@ -54,6 +58,24 @@ const Tabs = () => {
         options={{
           tabBarIcon: props => (
             <Icon as={Feather} name="inbox" size="xl" {...props} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={routes.charts}
+        component={ChartsScreen}
+        options={{
+          tabBarIcon: props => (
+            <Icon as={Feather} name="bar-chart-2" size="xl" {...props} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name={routes.settings}
+        component={SettingsScreen}
+        options={{
+          tabBarIcon: props => (
+            <Icon as={Feather} name="settings" size="xl" {...props} />
           ),
         }}
       />
