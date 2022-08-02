@@ -38,12 +38,12 @@ const Container = props => {
           _dark={{ bg: "blueGray.900" }}
           _light={{ bg: "blueGray.50" }}
           flex={1}
-          px={noPadding ? 0 : 5}
-          pb={noScroll ? 0 : 5}
           safeAreaTop={safeAreaTop ? true : 0}
           safeAreaBottom={safeAreaBottom ? true : 0}>
           <Wrapper style={styles.wrapper} keyboardShouldPersistTaps="handled">
-            {children}
+            <Box flex={1} px={noPadding ? 0 : 5} pb={noScroll ? 0 : 5}>
+              {children}
+            </Box>
           </Wrapper>
         </Box>
       </KeyboardAvoiding>
