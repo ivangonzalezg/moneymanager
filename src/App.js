@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useColorMode, Box, StatusBar, Icon } from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -28,10 +28,6 @@ import CategoriesScreen from "./screens/categories";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const { VISIBLE, HIDDEN } = constants.progress;
-const { TRANSACTIONS, CATEGORY, CATEGORIES } = constants.state;
-const { LAST_CATEGORY } = constants.storage;
 
 const Tabs = () => {
   const { colorMode } = useColorMode();
@@ -87,47 +83,71 @@ const Tabs = () => {
 };
 
 const App = () => {
-  const { colorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
   const [progress, dispatchProgress] = useReducer(
     progressReducer,
     initialProgress,
   );
   const [state, dispatchState] = useReducer(stateReducer, initialState);
+  const [isSplashScreen, setIsSplashScreen] = useState(true);
 
   const progressContext = useMemo(
     () => ({
       showProgressDialog: (label = "") =>
-        dispatchProgress({ type: VISIBLE, label }),
-      hideProgressDialog: () => dispatchProgress({ type: HIDDEN }),
+        dispatchProgress({ type: constants.progress.VISIBLE, label }),
+      hideProgressDialog: () =>
+        dispatchProgress({ type: constants.progress.HIDDEN }),
     }),
     [],
   );
 
   const stateContext = useMemo(
     () => ({
-      updateTransactions: () => dispatchState({ type: TRANSACTIONS }),
-      updateCategory: category => dispatchState({ type: CATEGORY, category }),
+      updateTransactions: () =>
+        dispatchState({ type: constants.state.TRANSACTIONS }),
+      updateCategory: category =>
+        dispatchState({ type: constants.state.CATEGORY, category }),
       updateCategories: categories =>
-        dispatchState({ type: CATEGORIES, categories }),
+        dispatchState({ type: constants.state.CATEGORIES, categories }),
       ...state,
     }),
     [state],
   );
 
+  useEffect(() => {
+    if (!isSplashScreen) {
+      SplashScreen.hide();
+    }
+  }, [isSplashScreen]);
+
   const initializeApp = async () => {
     try {
-      SplashScreen.hide();
+      const _colorMode = await AsyncStorage.getItem(
+        constants.storage.COLOR_MODE,
+      );
+      if (_colorMode && _colorMode !== colorMode) {
+        toggleColorMode();
+      }
       await database.configure();
-      dispatchState({ type: TRANSACTIONS });
+      dispatchState({ type: constants.state.TRANSACTIONS });
       await database.createCategories();
       const categories = await database.getCategories();
-      dispatchState({ type: CATEGORIES, categories });
-      const last_category = await AsyncStorage.getItem(LAST_CATEGORY);
-      if (last_category) {
-        dispatchState({ type: CATEGORY, category: JSON.parse(last_category) });
+      dispatchState({ type: constants.state.CATEGORIES, categories });
+      const lastCategory = await AsyncStorage.getItem(
+        constants.storage.LAST_CATEGORY,
+      );
+      if (lastCategory) {
+        dispatchState({
+          type: constants.state.CATEGORY,
+          category: JSON.parse(lastCategory),
+        });
       } else {
-        dispatchState({ type: CATEGORY, category: categories[0] });
+        dispatchState({
+          type: constants.state.CATEGORY,
+          category: categories[0],
+        });
       }
+      setIsSplashScreen(false);
     } catch (error) {
       console.error(error);
     }

@@ -1,10 +1,6 @@
 import { createContext } from "react";
 import constants from "../constants";
 
-const {
-  progress: { VISIBLE, HIDDEN },
-} = constants;
-
 const initialProgress = {
   visible: false,
   label: "",
@@ -16,13 +12,13 @@ const ProgressContext = createContext(initialProgress);
 
 const progressReducer = (prevState, action) => {
   switch (action.type) {
-    case VISIBLE:
+    case constants.progress.VISIBLE:
       return {
         ...prevState,
         visible: true,
         label: action.label,
       };
-    case HIDDEN:
+    case constants.progress.HIDDEN:
       return {
         label: "",
         visible: false,

@@ -1,8 +1,6 @@
 import { createContext } from "react";
 import constants from "../constants";
 
-const { TRANSACTIONS, CATEGORY, CATEGORIES } = constants.state;
-
 const category = {
   id: 0,
   position: 0,
@@ -25,17 +23,17 @@ const StateContext = createContext({
 
 const stateReducer = (prevState, action) => {
   switch (action.type) {
-    case TRANSACTIONS:
+    case constants.state.TRANSACTIONS:
       return {
         ...prevState,
         transactions: new Date().getTime(),
       };
-    case CATEGORY:
+    case constants.state.CATEGORY:
       return {
         ...prevState,
         category: action.category,
       };
-    case CATEGORIES:
+    case constants.state.CATEGORIES:
       return {
         ...prevState,
         categories: action.categories,

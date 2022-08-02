@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Heading,
   HStack,
@@ -11,11 +11,13 @@ import {
 } from "native-base";
 import Feather from "react-native-vector-icons/Feather";
 import DeviceInfo from "react-native-device-info";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
 import { openUrl } from "../../utils";
 import Br from "../../components/br";
 import routes from "../../routes";
+import constants from "../../constants";
 
 const ButtonItem = React.memo(props => {
   const {
@@ -49,6 +51,14 @@ const Settings = props => {
   const { navigation } = props;
   const { colorMode, toggleColorMode } = useColorMode();
 
+  const onToggleColorMode = useCallback(() => {
+    AsyncStorage.setItem(
+      constants.storage.COLOR_MODE,
+      colorMode === "light" ? "dark" : "light",
+    );
+    toggleColorMode();
+  }, [colorMode, toggleColorMode]);
+
   return (
     <Container safeAreaTop disableFeedback>
       <Heading textAlign="center" mt={2} mb={10}>
@@ -67,7 +77,7 @@ const Settings = props => {
         <Switch
           colorScheme="blueGray"
           isChecked={colorMode === "dark"}
-          onToggle={toggleColorMode}
+          onToggle={onToggleColorMode}
         />
       </HStack>
       <Br size={1} />

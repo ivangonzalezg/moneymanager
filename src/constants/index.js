@@ -14,6 +14,7 @@ const constants = {
   },
   storage: {
     LAST_CATEGORY: "last_category",
+    COLOR_MODE: "color_mode",
   },
 };
 
