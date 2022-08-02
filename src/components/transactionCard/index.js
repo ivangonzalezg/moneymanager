@@ -18,11 +18,9 @@ const TransactionCard = props => {
         <VStack flex={1}>
           <HStack flex={1} space={2}>
             <VStack flex={1} justifyContent="center">
-              <Text fontSize="md" bold>
-                {item.category.name}
-              </Text>
+              <Text bold>{item.category.name}</Text>
               {Boolean(item.description) && (
-                <Text fontSize="md" numberOfLines={1} opacity={70}>
+                <Text numberOfLines={1} opacity={70}>
                   {item.description}
                 </Text>
               )}
@@ -30,12 +28,11 @@ const TransactionCard = props => {
             <VStack>
               <Text
                 bold
-                fontSize="md"
                 _light={item.is_income && { color: "success.700" }}
                 _dark={item.is_income && { color: "success.500" }}>
                 {formatToCurrency(item.amount)}
               </Text>
-              <Text fontSize="md" alignSelf="flex-end" opacity={70}>
+              <Text alignSelf="flex-end" opacity={70}>
                 {moment(item.date).format(moment.HTML5_FMT.TIME)}
               </Text>
             </VStack>

@@ -152,7 +152,9 @@ const HomeScreen = props => {
         refreshControl={<RefreshControl refreshing={isRefreshing} />}
         ListHeaderComponent={() => (
           <Center mt={10}>
-            <Text opacity={70}>Gastado este mes</Text>
+            <Text fontSize="sm" opacity={70}>
+              Gastado este mes
+            </Text>
             <Heading fontSize="4xl">{formatToCurrency(monthExpenses)}</Heading>
           </Center>
         )}
@@ -163,8 +165,12 @@ const HomeScreen = props => {
             _dark={{ bg: "blueGray.900" }}
             _light={{ bg: "blueGray.50" }}>
             <HStack justifyContent="space-between" alignItems="center">
-              <Text opacity={70}>{section.title}</Text>
-              <Text opacity={70}>{formatToCurrency(section.total)}</Text>
+              <Text fontSize="sm" opacity={70}>
+                {section.title}
+              </Text>
+              <Text fontSize="sm" opacity={70}>
+                {formatToCurrency(section.total)}
+              </Text>
             </HStack>
             <Divider mt={2} />
           </Box>

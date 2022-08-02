@@ -1,6 +1,7 @@
 import moment from "moment";
 import numbro from "numbro";
 import * as RNLocalize from "react-native-localize";
+import { Linking } from "react-native";
 import categories from "../constants/categories";
 
 const is24Hour = RNLocalize.uses24HourClock();
@@ -69,6 +70,11 @@ const populatingTransactions = transactions =>
     category: getCategory(transaction.category_id),
   }));
 
+const openUrl = url =>
+  Linking.canOpenURL(url)
+    .then(supported => supported && Linking.openURL(url))
+    .catch(() => {});
+
 export {
   formatToCurrency,
   formatDate,
@@ -76,4 +82,5 @@ export {
   getCategory,
   transformTransactionsIntoSections,
   populatingTransactions,
+  openUrl,
 };

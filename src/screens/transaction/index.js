@@ -237,7 +237,7 @@ const TransactionScreen = props => {
           onPress={onOpenCategoryList}>
           <HStack alignItems="center" space={2}>
             <SimpleEmoji shortName={category.icon} style={styles.icon} />
-            <Text flex={1} fontSize="md" numberOfLines={1}>
+            <Text flex={1} numberOfLines={1}>
               {category.name}
             </Text>
             <Icon
@@ -323,9 +323,7 @@ const TransactionScreen = props => {
                 }}>
                 <HStack alignItems="center" space={2}>
                   <SimpleEmoji shortName={item.icon} style={styles.icon} />
-                  <Text fontSize="md" numberOfLines={1}>
-                    {item.name}
-                  </Text>
+                  <Text numberOfLines={1}>{item.name}</Text>
                 </HStack>
               </Actionsheet.Item>
             )}

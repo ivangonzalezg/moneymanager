@@ -2,7 +2,7 @@
  * @format
  */
 import React from "react";
-import { AppRegistry, LogBox } from "react-native";
+import { AppRegistry, LogBox, Platform } from "react-native";
 import { extendTheme, NativeBaseProvider } from "native-base";
 import "moment/locale/es";
 import App from "./src/App";
@@ -22,6 +22,16 @@ const Root = () => {
             defaultProps: {
               _pressed: { opacity: 70 },
               _disabled: { opacity: 50 },
+            },
+          },
+          Text: {
+            defaultProps: {
+              fontSize: "md",
+            },
+          },
+          Switch: {
+            defaultProps: {
+              size: Platform.OS === "ios" ? "sm" : "md",
             },
           },
         },

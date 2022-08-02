@@ -49,7 +49,7 @@ export default function ProgressDialog(props) {
               _light={{ color: "primary.900" }}
               _dark={{ color: "primary.50" }}
             />
-            <Text fontSize="md">{label || "Cargando"}...</Text>
+            <Text>{label || "Cargando"}...</Text>
           </HStack>
         </VStack>
       </Box>
