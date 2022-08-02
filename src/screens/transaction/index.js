@@ -52,17 +52,7 @@ const keyboard = [
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9],
-  [
-    null,
-    0,
-    <Icon
-      as={Feather}
-      name="delete"
-      size={25}
-      _light={{ color: colors.muted[900] }}
-      _dark={{ color: colors.muted[50] }}
-    />,
-  ],
+  [null, 0, <Icon as={Feather} name="delete" size={25} />],
 ];
 
 const TransactionScreen = props => {
@@ -181,15 +171,7 @@ const TransactionScreen = props => {
             pl={1}
             pr={0}
             variant="unstyled"
-            icon={
-              <Icon
-                as={Feather}
-                name="trash"
-                size="lg"
-                _light={{ color: colors.muted[900] }}
-                _dark={{ color: colors.muted[50] }}
-              />
-            }
+            icon={<Icon as={Feather} name="trash" size="lg" />}
             onPress={onDelete}
           />
         ) : (
@@ -212,14 +194,7 @@ const TransactionScreen = props => {
           value={description}
           onChangeText={setDescription}
         />
-        <Button
-          size="lg"
-          variant="unstyled"
-          borderRadius="3xl"
-          _light={{ bg: "muted.900", _text: { color: "muted.50" } }}
-          _dark={{ bg: "muted.50", _text: { color: "muted.900" } }}
-          disabled={!amount || isSaving}
-          onPress={onSave}>
+        <Button disabled={!amount || isSaving} onPress={onSave}>
           Guardar
         </Button>
       </HStack>
@@ -240,13 +215,7 @@ const TransactionScreen = props => {
             <Text flex={1} numberOfLines={1}>
               {category.name}
             </Text>
-            <Icon
-              as={Feather}
-              name="chevron-down"
-              size={25}
-              _light={{ color: colors.muted[900] }}
-              _dark={{ color: colors.muted[50] }}
-            />
+            <Icon as={Feather} name="chevron-down" size={25} />
           </HStack>
         </Pressable>
       </HStack>

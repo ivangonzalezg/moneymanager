@@ -4,6 +4,7 @@ const routes = {
   transaction: "transaction",
   charts: "charts",
   settings: "settings",
+  categories: "categories",
 };
 
 export default routes;

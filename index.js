@@ -5,6 +5,7 @@ import React from "react";
 import { AppRegistry, LogBox, Platform } from "react-native";
 import { extendTheme, NativeBaseProvider } from "native-base";
 import "moment/locale/es";
+import "react-native-gesture-handler";
 import App from "./src/App";
 import { name as appName } from "./app.json";
 
@@ -32,6 +33,15 @@ const Root = () => {
           Switch: {
             defaultProps: {
               size: Platform.OS === "ios" ? "sm" : "md",
+            },
+          },
+          Button: {
+            defaultProps: {
+              size: "lg",
+              variant: "unstyled",
+              borderRadius: "full",
+              _light: { bg: "muted.900", _text: { color: "muted.50" } },
+              _dark: { bg: "muted.50", _text: { color: "muted.900" } },
             },
           },
         },

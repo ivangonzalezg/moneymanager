@@ -18,7 +18,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import Container from "../../components/container";
-import colors from "../../constants/colors";
 import {
   formatToCurrency,
   transformTransactionsIntoSections,
@@ -97,15 +96,7 @@ const HomeScreen = props => {
           onChangeText={setQuery}
           onSubmitEditing={() => filterTransactions(query)}
           InputLeftElement={
-            <Icon
-              as={Feather}
-              name="search"
-              my={2}
-              ml={2}
-              size={6}
-              _dark={{ color: "gray.200" }}
-              _light={{ color: "gray.600" }}
-            />
+            <Icon as={Feather} name="search" my={2} ml={2} size={6} />
           }
           InputRightElement={
             query && (
@@ -114,15 +105,7 @@ const HomeScreen = props => {
                   setQuery("");
                   filterTransactions();
                 }}>
-                <Icon
-                  as={Feather}
-                  name="x"
-                  my={2}
-                  mx={1}
-                  size={6}
-                  _dark={{ color: "gray.200" }}
-                  _light={{ color: "gray.600" }}
-                />
+                <Icon as={Feather} name="x" my={2} mx={1} size={6} />
               </Pressable>
             )
           }
@@ -135,15 +118,7 @@ const HomeScreen = props => {
             _light={{ bg: "muted.900" }}
             _dark={{ bg: "muted.100" }}
             colorScheme="muted"
-            icon={
-              <Icon
-                as={Feather}
-                name="plus"
-                size="xl"
-                _light={{ color: colors.muted[100] }}
-                _dark={{ color: colors.muted[900] }}
-              />
-            }
+            icon={<Icon as={Feather} name="plus" size="xl" />}
             onPress={() => navigation.navigate(routes.transaction)}
           />
         </VStack>
@@ -182,13 +157,7 @@ const HomeScreen = props => {
         ListEmptyComponent={() =>
           !isRefreshing && (
             <Center flex={1} px={5}>
-              <Icon
-                as={MaterialCommunityIcons}
-                name="cash-remove"
-                size="6xl"
-                _dark={{ color: "gray.200" }}
-                _light={{ color: "gray.600" }}
-              />
+              <Icon as={MaterialCommunityIcons} name="cash-remove" size="6xl" />
               <Text bold fontSize="lg" textAlign="center">
                 No se ha encontrado ninguna transacción
               </Text>

@@ -19,8 +19,8 @@ const BackButton = ({ hidden }) => {
           as={Feather}
           name="arrow-left"
           size="xl"
-          _light={{ color: hidden ? colors.transparent : colors.muted[900] }}
-          _dark={{ color: hidden ? colors.transparent : colors.muted[50] }}
+          _light={hidden && { color: colors.transparent }}
+          _dark={hidden && { color: colors.transparent }}
         />
       }
       onPress={navigation.goBack}

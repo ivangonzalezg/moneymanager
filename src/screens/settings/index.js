@@ -15,6 +15,7 @@ import Container from "../../components/container";
 import colors from "../../constants/colors";
 import { openUrl } from "../../utils";
 import Br from "../../components/br";
+import routes from "../../routes";
 
 const ButtonItem = React.memo(props => {
   const {
@@ -44,7 +45,8 @@ const ButtonItem = React.memo(props => {
   );
 });
 
-const Settings = () => {
+const Settings = props => {
+  const { navigation } = props;
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
@@ -82,7 +84,7 @@ const Settings = () => {
         borderBottomRadius
         label="Categorías"
         icon="list"
-        onPress={() => {}}
+        onPress={() => navigation.navigate(routes.categories)}
       />
       <Br />
       <ButtonItem

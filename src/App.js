@@ -23,6 +23,7 @@ import HomeScreen from "./screens/home";
 import TransactionScreen from "./screens/transaction";
 import ChartsScreen from "./screens/charts";
 import SettingsScreen from "./screens/settings";
+import CategoriesScreen from "./screens/categories";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -143,6 +144,10 @@ const App = () => {
                 name={routes.transaction}
                 component={TransactionScreen}
                 initialParams={{}}
+              />
+              <Stack.Screen
+                name={routes.categories}
+                component={CategoriesScreen}
               />
             </Stack.Navigator>
           </Box>

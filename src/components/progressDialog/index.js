@@ -4,7 +4,7 @@ import { Keyboard, Platform, BackHandler } from "react-native";
 import { Box, HStack, Spinner, Text, VStack } from "native-base";
 import styles from "./styles";
 
-export default function ProgressDialog(props) {
+const ProgressDialog = props => {
   const { visible, label } = props;
 
   useEffect(() => {
@@ -55,7 +55,9 @@ export default function ProgressDialog(props) {
       </Box>
     </Box>
   );
-}
+};
+
+export default React.memo(ProgressDialog);
 
 ProgressDialog.propTypes = {
   visible: PropTypes.bool.isRequired,

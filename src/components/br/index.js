@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { View } from "react-native";
 import styles from "./styles";
 
-export default function Br(props) {
+const Br = props => {
   const { size, horizontal } = props;
 
   return (
@@ -14,7 +14,9 @@ export default function Br(props) {
       ]}
     />
   );
-}
+};
+
+export default React.memo(Br);
 
 Br.propTypes = {
   size: PropTypes.number,
