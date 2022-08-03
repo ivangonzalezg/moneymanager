@@ -1,17 +1,24 @@
 /**
  * @format
  */
+import "react-native-gesture-handler";
 import React from "react";
-import { AppRegistry, LogBox, Platform } from "react-native";
+import { AppRegistry, LogBox, Platform, StyleSheet } from "react-native";
 import { extendTheme, NativeBaseProvider } from "native-base";
 import "moment/locale/es";
-import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import App from "./src/App";
 import { name as appName } from "./app.json";
 
 LogBox.ignoreLogs([
   "Warning: Failed prop type: Invalid props.keyTextStyle key `color` supplied to `VirtualKeyboard`",
 ]);
+
+const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
+});
 
 const Root = () => {
   return (
@@ -46,7 +53,9 @@ const Root = () => {
           },
         },
       })}>
-      <App />
+      <GestureHandlerRootView style={styles.flex}>
+        <App />
+      </GestureHandlerRootView>
     </NativeBaseProvider>
   );
 };
