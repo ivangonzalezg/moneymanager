@@ -39,8 +39,7 @@ const Categories = props => {
           position: index + 1,
         })),
       );
-      const _categories = await database.getCategories();
-      state.updateCategories(_categories);
+      state.updateCategories();
     } catch (_) {}
     setIsSaving(false);
   };
@@ -66,7 +65,8 @@ const Categories = props => {
               minH="55px"
               alignItems="center"
               space={2}
-              borderTopRadius={index === 0 ? "xl" : "none"}
+              borderTopRadius={index === 0 && !isActive ? "xl" : "none"}
+              shadow={isActive && "9"}
               _light={{ bg: colors.blueGray[200] }}
               _dark={{ bg: colors.blueGray[800] }}>
               <Pressable
@@ -116,7 +116,7 @@ const Categories = props => {
           )}
         />
       </Box>
-      <Button mt={5} onPress={onSave} disabled={!hasChanged || isSaving}>
+      <Button mt={5} mb={2} onPress={onSave} disabled={!hasChanged || isSaving}>
         Guardar
       </Button>
     </Container>

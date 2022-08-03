@@ -50,8 +50,7 @@ const Category = props => {
         data.position = params.position;
         await database.createCategory(data);
       }
-      const categories = await database.getCategories();
-      state.updateCategories(categories);
+      state.updateCategories();
       navigation.goBack();
     } catch (_) {}
   };

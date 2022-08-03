@@ -108,8 +108,12 @@ const App = () => {
         dispatchState({ type: constants.state.TRANSACTIONS }),
       updateCategory: category =>
         dispatchState({ type: constants.state.CATEGORY, category }),
-      updateCategories: categories =>
-        dispatchState({ type: constants.state.CATEGORIES, categories }),
+      updateCategories: () =>
+        database
+          .getCategories()
+          .then(categories =>
+            dispatchState({ type: constants.state.CATEGORIES, categories }),
+          ),
       ...state,
     }),
     [state],
