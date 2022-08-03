@@ -33,7 +33,9 @@ const Container = props => {
       onPress={Keyboard.dismiss}
       accessible={false}
       disabled={disableFeedback}>
-      <KeyboardAvoiding flex={1} behavior="height">
+      <KeyboardAvoiding
+        flex={1}
+        behavior={!disableKeyboardAvoiding && "height"}>
         <Box
           _dark={{ bg: "blueGray.900" }}
           _light={{ bg: "blueGray.50" }}
