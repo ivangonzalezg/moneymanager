@@ -200,6 +200,22 @@ const updateCategory = (id = 0, data = {}) =>
     ),
   );
 
+const reorderCategories = (_categories = []) =>
+  new Promise(resolve =>
+    executeSql(
+      `UPDATE ${constants.tables.CATEGORIES} SET position = CASE ${_categories
+        .map(
+          _category => `WHEN id = ${_category.id} THEN ${_category.position}`,
+        )
+        .join(" ")} END WHERE id IN (${_categories
+        .map(_category => _category.id)
+        .join(", ")})`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
@@ -211,6 +227,7 @@ const database = {
   getCategories,
   createCategory,
   updateCategory,
+  reorderCategories,
 };
 
 export default database;

@@ -18,18 +18,35 @@ import Br from "../../components/br";
 import { StateContext } from "../../contexts/state";
 import routes from "../../routes";
 import Emoji from "../../components/emoji";
+import database from "../../database";
 
 const Categories = props => {
   const { navigation } = props;
   const state = useContext(StateContext);
   const [categories, setCategories] = useState(state.categories);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setCategories(state.categories);
   }, [state.categories]);
 
+  const onSave = async () => {
+    try {
+      setIsSaving(true);
+      await database.reorderCategories(
+        categories.map((category, index) => ({
+          id: category.id,
+          position: index + 1,
+        })),
+      );
+      const _categories = await database.getCategories();
+      state.updateCategories(_categories);
+    } catch (_) {}
+    setIsSaving(false);
+  };
+
   const hasChanged =
-    JSON.stringify(state.categories) === JSON.stringify(categories);
+    JSON.stringify(state.categories) !== JSON.stringify(categories);
 
   return (
     <Container noScroll disableFeedback safeAreaTop safeAreaBottom>
@@ -99,7 +116,7 @@ const Categories = props => {
           )}
         />
       </Box>
-      <Button mt={5} disabled={hasChanged}>
+      <Button mt={5} onPress={onSave} disabled={!hasChanged || isSaving}>
         Guardar
       </Button>
     </Container>
