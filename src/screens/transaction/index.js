@@ -24,7 +24,6 @@ import {
 } from "native-base";
 import { VirtualKeyboard as RNVirtualKeyboard } from "react-native-screen-keyboard";
 import Feather from "react-native-vector-icons/Feather";
-import SimpleEmoji from "simple-react-native-emoji";
 import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
@@ -39,6 +38,7 @@ import { formatDate, formatToCurrency, getCategory } from "../../utils";
 import database from "../../database";
 import { StateContext } from "../../contexts";
 import constants from "../../constants";
+import Emoji from "../../components/emoji";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
@@ -217,7 +217,7 @@ const TransactionScreen = props => {
           pr={2}
           onPress={onOpenCategoryList}>
           <HStack alignItems="center" space={2}>
-            <SimpleEmoji shortName={category.icon} style={styles.icon} />
+            <Emoji shortName={category.icon} fontSize="xl" />
             <Text flex={1} numberOfLines={1}>
               {category.name}
             </Text>
@@ -297,7 +297,7 @@ const TransactionScreen = props => {
                   onCloseCategoryList();
                 }}>
                 <HStack alignItems="center" space={2}>
-                  <SimpleEmoji shortName={item.icon} style={styles.icon} />
+                  <Emoji shortName={item.icon} fontSize="xl" />
                   <Text numberOfLines={1}>{item.name}</Text>
                 </HStack>
               </Actionsheet.Item>

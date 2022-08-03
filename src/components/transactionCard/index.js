@@ -1,11 +1,10 @@
 import React from "react";
 import { Divider, HStack, Pressable, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import SimpleEmoji from "simple-react-native-emoji";
 import moment from "moment";
-import styles from "./styles";
 import routes from "../../routes";
 import { formatToCurrency } from "../../utils";
+import Emoji from "../emoji";
 
 const TransactionCard = props => {
   const { item } = props;
@@ -14,7 +13,7 @@ const TransactionCard = props => {
   return (
     <Pressable onPress={() => navigation.navigate(routes.transaction, item)}>
       <HStack space={5} alignItems="center" my={2}>
-        <SimpleEmoji shortName={item.categoryIcon} style={styles.icon} />
+        <Emoji shortName={item.categoryIcon} fontSize="2xl" />
         <VStack flex={1}>
           <HStack flex={1} space={2}>
             <VStack flex={1} justifyContent="center">

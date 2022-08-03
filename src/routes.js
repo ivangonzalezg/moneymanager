@@ -5,6 +5,7 @@ const routes = {
   charts: "charts",
   settings: "settings",
   categories: "categories",
+  category: "category",
 };
 
 export default routes;

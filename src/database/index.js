@@ -174,6 +174,32 @@ const getCategories = () =>
     ),
   );
 
+const createCategory = (data = {}) =>
+  new Promise(resolve =>
+    executeSql(
+      `INSERT INTO ${constants.tables.CATEGORIES} (${Object.keys(data).join(
+        ",",
+      )}) VALUES (${Object.keys(data)
+        .map(() => "?")
+        .join(",")})`,
+      Object.values(data),
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
+const updateCategory = (id = 0, data = {}) =>
+  new Promise(resolve =>
+    executeSql(
+      `UPDATE ${constants.tables.CATEGORIES} SET ${Object.keys(data)
+        .map(key => `${key} = "${data[key]}"`)
+        .join(", ")} WHERE id = ${id}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
@@ -183,6 +209,8 @@ const database = {
   deleteTransaction,
   createCategories,
   getCategories,
+  createCategory,
+  updateCategory,
 };
 
 export default database;

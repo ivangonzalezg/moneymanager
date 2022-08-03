@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,17 +11,22 @@ import {
 } from "native-base";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import Feather from "react-native-vector-icons/Feather";
-import styles from "./styles";
 import BackButton from "../../components/backButton";
 import Container from "../../components/container";
-import SimpleEmoji from "simple-react-native-emoji";
 import colors from "../../constants/colors";
 import Br from "../../components/br";
 import { StateContext } from "../../contexts/state";
+import routes from "../../routes";
+import Emoji from "../../components/emoji";
 
-const Categories = () => {
+const Categories = props => {
+  const { navigation } = props;
   const state = useContext(StateContext);
   const [categories, setCategories] = useState(state.categories);
+
+  useEffect(() => {
+    setCategories(state.categories);
+  }, [state.categories]);
 
   const hasChanged =
     JSON.stringify(state.categories) === JSON.stringify(categories);
@@ -41,16 +46,22 @@ const Categories = () => {
           renderItem={({ item, drag, isActive, index }) => (
             <HStack
               px={3}
-              py={3}
+              minH="55px"
               alignItems="center"
               space={2}
               borderTopRadius={index === 0 ? "xl" : "none"}
               _light={{ bg: colors.blueGray[200] }}
               _dark={{ bg: colors.blueGray[800] }}>
-              <SimpleEmoji shortName={item.icon} style={styles.icon} />
-              <Text flex={1} numberOfLines={1}>
-                {item.name}
-              </Text>
+              <Pressable
+                flex={1}
+                onPress={() => navigation.navigate(routes.category, item)}>
+                <HStack alignItems="center" space={2}>
+                  <Emoji shortName={item.icon} fontSize="xl" />
+                  <Text flex={1} numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                </HStack>
+              </Pressable>
               <IconButton
                 p={1}
                 variant="unstyled"
@@ -66,10 +77,15 @@ const Categories = () => {
           keyExtractor={item => String(item.id)}
           ItemSeparatorComponent={() => <Br size={1} />}
           ListFooterComponent={() => (
-            <Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate(routes.category, {
+                  position: categories.length + 1,
+                })
+              }>
               <HStack
                 px={3}
-                py={3}
+                minH="55px"
                 mt="1px"
                 alignItems="center"
                 space={2}
