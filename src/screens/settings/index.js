@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import {
   Heading,
   HStack,
@@ -12,12 +12,18 @@ import {
 import Feather from "react-native-vector-icons/Feather";
 import DeviceInfo from "react-native-device-info";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Papa from "papaparse";
+import RNFS from "react-native-fs";
+import * as RNZA from "react-native-zip-archive";
+import Share from "react-native-share";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
 import { openUrl } from "../../utils";
 import Br from "../../components/br";
 import routes from "../../routes";
 import constants from "../../constants";
+import database from "../../database";
+import { ProgressContext } from "../../contexts";
 
 const ButtonItem = React.memo(props => {
   const {
@@ -50,6 +56,7 @@ const ButtonItem = React.memo(props => {
 const Settings = props => {
   const { navigation } = props;
   const { colorMode, toggleColorMode } = useColorMode();
+  const progress = useContext(ProgressContext);
 
   const onToggleColorMode = useCallback(() => {
     AsyncStorage.setItem(
@@ -58,6 +65,42 @@ const Settings = props => {
     );
     toggleColorMode();
   }, [colorMode, toggleColorMode]);
+
+  const onExportData = async () => {
+    try {
+      progress.showProgressDialog("Exportando datos");
+      const categories = await database.getAllTableData(
+        constants.tables.CATEGORIES,
+      );
+      const transactions = await database.getAllTableData(
+        constants.tables.TRANSACTIONS,
+      );
+      const categoriesCsv = Papa.unparse(categories);
+      const transactionsCsv = Papa.unparse(transactions);
+      const categoriesCsvPath = `${RNFS.DocumentDirectoryPath}/${constants.tables.CATEGORIES}.csv`;
+      const transactionsCsvPath = `${RNFS.DocumentDirectoryPath}/${constants.tables.TRANSACTIONS}.csv`;
+      await RNFS.writeFile(categoriesCsvPath, categoriesCsv, "utf8");
+      await RNFS.writeFile(transactionsCsvPath, transactionsCsv, "utf8");
+      const zipPath = await RNZA.zip(
+        [categoriesCsvPath, transactionsCsvPath],
+        `${RNFS.DocumentDirectoryPath}/moneymanager.zip`,
+      );
+      progress.hideProgressDialog();
+      await Share.open({
+        message: "Share message",
+        title: "Share title",
+        url: `file://${zipPath}`,
+        type: "text/csv",
+        failOnCancel: false,
+      });
+      await RNFS.unlink(categoriesCsvPath);
+      await RNFS.unlink(transactionsCsvPath);
+      await RNFS.unlink(zipPath);
+    } catch (error) {
+      console.log(error);
+      progress.hideProgressDialog();
+    }
+  };
 
   return (
     <Container safeAreaTop disableFeedback>
@@ -101,7 +144,7 @@ const Settings = props => {
         borderTopRadius
         label="Exportar datos"
         icon="download"
-        onPress={() => {}}
+        onPress={onExportData}
       />
       <Br size={1} />
       <ButtonItem label="Importar datos" icon="upload" onPress={() => {}} />

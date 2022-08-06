@@ -86,13 +86,7 @@ const getTransactions = () =>
     executeSql(
       `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN categories c ON t.category_id = c.id ORDER BY date DESC, id DESC`,
       [],
-      (_, results) => {
-        const data = [];
-        for (let i = 0; i < results.rows.length; i++) {
-          data.push(results.rows.item(i));
-        }
-        resolve(data);
-      },
+      (_, results) => resolve(results.rows.raw()),
       () => resolve([]),
     ),
   );
@@ -109,7 +103,7 @@ const getMonthExpenses = () =>
         .toISOString()}" AND is_income = 0`,
       [],
       (_, results) => {
-        if (results.rows.length > 0) {
+        if (results.rows.item(0).total > 0) {
           resolve(results.rows.item(0).total);
         } else {
           resolve(0);
@@ -163,13 +157,7 @@ const getCategories = () =>
     executeSql(
       `SELECT * FROM ${constants.tables.CATEGORIES} ORDER BY position ASC`,
       [],
-      (_, results) => {
-        const data = [];
-        for (let i = 0; i < results.rows.length; i++) {
-          data.push(results.rows.item(i));
-        }
-        resolve(data);
-      },
+      (_, results) => resolve(results.rows.raw()),
       () => resolve([]),
     ),
   );
@@ -216,6 +204,16 @@ const reorderCategories = (_categories = []) =>
     ),
   );
 
+const getAllTableData = (table = "") =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT * FROM ${table}`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
 const database = {
   configure,
   createTransaction,
@@ -228,6 +226,7 @@ const database = {
   createCategory,
   updateCategory,
   reorderCategories,
+  getAllTableData,
 };
 
 export default database;
