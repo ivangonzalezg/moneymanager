@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { Animated, Dimensions } from "react-native";
+import { Animated, Dimensions, Platform } from "react-native";
 import {
   Actionsheet,
   Button,
@@ -27,7 +27,6 @@ import Feather from "react-native-vector-icons/Feather";
 import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
-import useKeyboardHeight from "react-native-use-keyboard-height";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "./styles";
@@ -39,6 +38,7 @@ import database from "../../database";
 import { StateContext } from "../../contexts";
 import constants from "../../constants";
 import Emoji from "../../components/emoji";
+import { useKeyboardHeight } from "../../hooks";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
@@ -100,7 +100,11 @@ const TransactionScreen = props => {
     Animated.timing(animatedHeight, {
       toValue:
         virtualKeyboardHeight < keyboardHeight
-          ? keyboardHeight - virtualKeyboardHeight - insets.bottom + 12
+          ? Platform.select({
+              android: 70,
+              default:
+                keyboardHeight - virtualKeyboardHeight - insets.bottom + 12,
+            })
           : 0,
       useNativeDriver: false,
       duration: 300,

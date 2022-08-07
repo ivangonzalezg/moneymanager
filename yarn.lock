@@ -6871,11 +6871,6 @@ react-native-svg@^12.4.3:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-react-native-use-keyboard-height@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-use-keyboard-height/-/react-native-use-keyboard-height-0.1.1.tgz#d6da2a475a0328d2212a801950566a85d4ba3204"
-  integrity sha512-Sof2fk4YmuIuU7NYq2btaAmtQYVI67xtP5EZDsvrEq+58t4mwRoKCLcjbf1xqiY1vmd9+8ckzwpO5z5dmcokOA==
-
 react-native-vector-icons@^9.2.0:
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-9.2.0.tgz#3c0c82e95defd274d56363cbe8fead8d53167ebd"
