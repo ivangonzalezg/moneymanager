@@ -27,8 +27,8 @@ const TransactionCard = props => {
             <VStack>
               <Text
                 bold
-                _light={item.is_income && { color: "success.700" }}
-                _dark={item.is_income && { color: "success.500" }}>
+                _light={item.is_income && { color: "success.600" }}
+                _dark={item.is_income && { color: "success.400" }}>
                 {formatToCurrency(item.amount)}
               </Text>
               <Text alignSelf="flex-end" opacity={70}>

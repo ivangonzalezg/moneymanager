@@ -30,28 +30,24 @@ const createTable = (name = "", fields = []) =>
   );
 
 const configure = async () => {
-  try {
-    SQLite.enablePromise(true);
-    await createDatabase();
-    await Promise.all([
-      createTable(constants.tables.TRANSACTIONS, [
-        "id INTEGER PRIMARY KEY",
-        "amount INTEGER",
-        "category_id INTEGER",
-        "date DATETIME",
-        "description TEXT",
-        "is_income BOOLEAN DEFAULT 0",
-      ]),
-      createTable(constants.tables.CATEGORIES, [
-        "id INTEGER PRIMARY KEY",
-        "position INTEGER NOT NULL",
-        "name TEXT NOT NULL",
-        "icon TEXT NOT NULL",
-      ]),
-    ]);
-  } catch (error) {
-    console.error(error);
-  }
+  SQLite.enablePromise(true);
+  await createDatabase();
+  await Promise.all([
+    createTable(constants.tables.TRANSACTIONS, [
+      "id INTEGER PRIMARY KEY",
+      "amount INTEGER",
+      "category_id INTEGER",
+      "date DATETIME",
+      "description TEXT",
+      "is_income BOOLEAN DEFAULT 0",
+    ]),
+    createTable(constants.tables.CATEGORIES, [
+      "id INTEGER PRIMARY KEY",
+      "position INTEGER NOT NULL",
+      "name TEXT NOT NULL",
+      "icon TEXT NOT NULL",
+    ]),
+  ]);
 };
 
 const executeSql = (sqlStatement, _arguments, callback, errorCallback) => {
@@ -129,6 +125,16 @@ const deleteTransaction = (id = 0) =>
   new Promise(resolve =>
     executeSql(
       `DELETE FROM ${constants.tables.TRANSACTIONS} WHERE id = ${id}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
+const deleteAllTransactions = () =>
+  new Promise(resolve =>
+    executeSql(
+      `DELETE FROM ${constants.tables.TRANSACTIONS}`,
       [],
       () => resolve(true),
       () => resolve(false),
@@ -218,9 +224,10 @@ const database = {
   configure,
   createTransaction,
   getTransactions,
-  getMonthExpenses,
   updateTransaction,
   deleteTransaction,
+  deleteAllTransactions,
+  getMonthExpenses,
   createCategories,
   getCategories,
   createCategory,

@@ -1,5 +1,7 @@
 import React, { useCallback, useContext } from "react";
 import {
+  AlertDialog,
+  Button,
   Heading,
   HStack,
   Icon,
@@ -7,6 +9,7 @@ import {
   Switch,
   Text,
   useColorMode,
+  useDisclose,
   VStack,
 } from "native-base";
 import Feather from "react-native-vector-icons/Feather";
@@ -23,7 +26,7 @@ import Br from "../../components/br";
 import routes from "../../routes";
 import constants from "../../constants";
 import database from "../../database";
-import { ProgressContext } from "../../contexts";
+import { ProgressContext, StateContext } from "../../contexts";
 
 const ButtonItem = React.memo(props => {
   const {
@@ -57,6 +60,12 @@ const Settings = props => {
   const { navigation } = props;
   const { colorMode, toggleColorMode } = useColorMode();
   const progress = useContext(ProgressContext);
+  const state = useContext(StateContext);
+  const {
+    isOpen: isDeleteModalOpen,
+    onOpen: onDeleteModalOpen,
+    onClose: onDeleteModalClose,
+  } = useDisclose();
 
   const onToggleColorMode = useCallback(() => {
     AsyncStorage.setItem(
@@ -96,8 +105,19 @@ const Settings = props => {
       await RNFS.unlink(categoriesCsvPath);
       await RNFS.unlink(transactionsCsvPath);
       await RNFS.unlink(zipPath);
-    } catch (error) {
-      console.log(error);
+    } catch (_) {
+      progress.hideProgressDialog();
+    }
+  };
+
+  const onDeleteData = async () => {
+    try {
+      onDeleteModalClose();
+      progress.showProgressDialog("Borrando datos");
+      await database.deleteAllTransactions();
+      state.updateTransactions();
+      progress.hideProgressDialog();
+    } catch (_) {
       progress.hideProgressDialog();
     }
   };
@@ -153,7 +173,7 @@ const Settings = props => {
         borderBottomRadius
         label="Borrar datos"
         icon="file-minus"
-        onPress={() => {}}
+        onPress={onDeleteModalOpen}
       />
       <Br />
       <ButtonItem
@@ -169,12 +189,41 @@ const Settings = props => {
       />
       <VStack alignItems="center" mt={5} space={1}>
         <Text fontSize="sm" opacity={70}>
-          Version {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
+          Versión {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
         </Text>
         <Pressable onPress={() => openUrl("https://ivangonzalez.co")}>
           <Text fontSize="sm">Ivan Gonzalez</Text>
         </Pressable>
       </VStack>
+      <AlertDialog
+        isOpen={isDeleteModalOpen}
+        onClose={onDeleteModalClose}
+        _backdrop={{ _pressed: { opacity: 0.3 } }}>
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton borderRadius="full" />
+          <AlertDialog.Header>Borrar datos</AlertDialog.Header>
+          <AlertDialog.Body>
+            <Text>
+              ¿Estás seguro que deseas borrar los datos?{" "}
+              <Text bold>Estás acción no se puede deshacer</Text>
+            </Text>
+          </AlertDialog.Body>
+          <AlertDialog.Footer>
+            <Button
+              variant="unstyled"
+              flex={1}
+              onPress={onDeleteData}
+              _light={{ bg: "transparent", _text: { color: "muted.900" } }}
+              _dark={{ bg: "transparent", _text: { color: "muted.50" } }}>
+              Si
+            </Button>
+            <Br horizontal />
+            <Button colorScheme="muted" flex={1} onPress={onDeleteModalClose}>
+              No
+            </Button>
+          </AlertDialog.Footer>
+        </AlertDialog.Content>
+      </AlertDialog>
     </Container>
   );
 };
