@@ -88,6 +88,12 @@ const TransactionScreen = props => {
   const [description, setDescription] = useState(params.description || "");
   const [isSaving, setIsSaving] = useState(false);
   const [animatedHeight] = useState(new Animated.Value(0));
+  const [isIncome, setIsIncome] = useState(Boolean(params.is_income));
+  const {
+    isOpen: isTypeList,
+    onOpen: onOpenTypeList,
+    onClose: onCloseTypeList,
+  } = useDisclose();
 
   useEffect(() => {
     RNAndroidKeyboardAdjust.setAdjustPan();
@@ -144,6 +150,7 @@ const TransactionScreen = props => {
         category_id: category.id,
         date: date.toISOString(),
         description,
+        is_income: isIncome,
       };
       if (params.id) {
         await database.updateTransaction(params.id, data);
@@ -172,9 +179,16 @@ const TransactionScreen = props => {
     <Container noScroll disableKeyboardAvoiding safeAreaTop safeAreaBottom>
       <HStack alignItems="center">
         <BackButton />
-        <Heading flex={1} textAlign="center">
-          Gastos
-        </Heading>
+        <Pressable flex={1} onPress={onOpenTypeList}>
+          <HStack
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+            space={1}>
+            <Heading>{isIncome ? "Ingreso" : "Gasto"}</Heading>
+            <Icon as={Feather} name="chevron-down" size="lg" />
+          </HStack>
+        </Pressable>
         {params.id ? (
           <IconButton
             py={1}
@@ -279,14 +293,17 @@ const TransactionScreen = props => {
         maximumDate={new Date()}
         onCancel={onCloseDatePicker}
       />
-      <Actionsheet isOpen={isCategoryList} onClose={onCloseCategoryList}>
+      <Actionsheet
+        isOpen={isCategoryList}
+        onClose={onCloseCategoryList}
+        _backdrop={{ _pressed: { opacity: 0.3 } }}>
         <Actionsheet.Content>
           <FlatList
             w="100%"
             data={state.categories}
             renderItem={({ item }) => (
               <Actionsheet.Item
-                isFocused={item.id === category.id}
+                isFocused={Number(item.id) === Number(category.id)}
                 _light={{
                   _pressed: { bg: colors.muted[200] },
                   _focus: { bg: colors.muted[200] },
@@ -307,6 +324,41 @@ const TransactionScreen = props => {
               </Actionsheet.Item>
             )}
             keyExtractor={item => String(item.id)}
+            showsVerticalScrollIndicator={false}
+          />
+        </Actionsheet.Content>
+      </Actionsheet>
+      <Actionsheet
+        isOpen={isTypeList}
+        onClose={onCloseTypeList}
+        _backdrop={{ _pressed: { opacity: 0.3 } }}>
+        <Actionsheet.Content>
+          <FlatList
+            w="100%"
+            data={[
+              { label: "Gasto", value: false },
+              { label: "Ingreso", value: true },
+            ]}
+            renderItem={({ item }) => (
+              <Actionsheet.Item
+                isFocused={isIncome === item.value}
+                _light={{
+                  _pressed: { bg: colors.muted[200] },
+                  _focus: { bg: colors.muted[200] },
+                }}
+                _dark={{
+                  _pressed: { bg: colors.muted[700] },
+                  _focus: { bg: colors.muted[700] },
+                }}
+                borderRadius="lg"
+                onPress={() => {
+                  setIsIncome(item.value);
+                  onCloseTypeList();
+                }}>
+                {item.label}
+              </Actionsheet.Item>
+            )}
+            keyExtractor={item => item.label.toLowerCase()}
             showsVerticalScrollIndicator={false}
           />
         </Actionsheet.Content>
