@@ -104,19 +104,19 @@ const getTransactions = () =>
     ),
   );
 
-const getMonthExpenses = () =>
+const getMonthBalance = () =>
   new Promise(resolve =>
     executeSql(
-      `SELECT SUM(amount) AS total FROM ${
+      `SELECT SUM(CASE WHEN is_income = 1 THEN amount ELSE amount*-1 END) AS total FROM ${
         constants.tables.TRANSACTIONS
       } WHERE date >= "${moment()
         .startOf("month")
         .toISOString()}" AND date <= "${moment()
         .endOf("month")
-        .toISOString()}" AND is_income = 0`,
+        .toISOString()}"`,
       [],
       (_, results) => {
-        if (results.rows.item(0).total > 0) {
+        if (results.rows.item(0).total !== null) {
           resolve(results.rows.item(0).total);
         } else {
           resolve(0);
@@ -255,7 +255,7 @@ const database = {
   updateTransaction,
   deleteTransaction,
   deleteAllTransactions,
-  getMonthExpenses,
+  getMonthBalance,
   createCategories,
   getCategories,
   createCategory,

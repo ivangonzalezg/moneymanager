@@ -150,7 +150,7 @@ const TransactionScreen = props => {
         category_id: category.id,
         date: date.toISOString(),
         description,
-        is_income: isIncome,
+        is_income: Number(isIncome),
       };
       if (params.id) {
         await database.updateTransaction(params.id, data);

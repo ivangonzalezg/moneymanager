@@ -151,8 +151,7 @@ const Settings = props => {
       state.updateCategories();
       state.updateTransactions();
       progress.hideProgressDialog();
-    } catch (error) {
-      console.log(error);
+    } catch (_) {
       progress.hideProgressDialog();
     }
   };
