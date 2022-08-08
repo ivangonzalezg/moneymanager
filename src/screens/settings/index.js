@@ -19,6 +19,8 @@ import Papa from "papaparse";
 import RNFS from "react-native-fs";
 import * as RNZA from "react-native-zip-archive";
 import Share from "react-native-share";
+import DocumentPicker from "react-native-document-picker";
+import getPath from "@flyerhq/react-native-android-uri-path";
 import Container from "../../components/container";
 import colors from "../../constants/colors";
 import { openUrl } from "../../utils";
@@ -92,12 +94,10 @@ const Settings = props => {
       await RNFS.writeFile(transactionsCsvPath, transactionsCsv, "utf8");
       const zipPath = await RNZA.zip(
         [categoriesCsvPath, transactionsCsvPath],
-        `${RNFS.DocumentDirectoryPath}/moneymanager.zip`,
+        `${RNFS.DocumentDirectoryPath}/${constants.BACKUP_FILE_NAME}`,
       );
       progress.hideProgressDialog();
       await Share.open({
-        message: "Share message",
-        title: "Share title",
         url: `file://${zipPath}`,
         type: "text/csv",
         failOnCancel: false,
@@ -105,7 +105,54 @@ const Settings = props => {
       await RNFS.unlink(categoriesCsvPath);
       await RNFS.unlink(transactionsCsvPath);
       await RNFS.unlink(zipPath);
+      // TODO: Display some confirmation to the user
     } catch (_) {
+      progress.hideProgressDialog();
+    }
+  };
+
+  const onImportData = async () => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.zip],
+      });
+      if (result.name !== constants.BACKUP_FILE_NAME) {
+        // TODO: Display some error to the user
+        return;
+      }
+      progress.showProgressDialog("Importando datos");
+      const folderPath = `${
+        RNFS.DocumentDirectoryPath
+      }/${constants.BACKUP_FILE_NAME.split(".").shift()}`;
+      await RNZA.unzip(getPath(result.uri), folderPath);
+      const files = await RNFS.readDir(folderPath);
+      await database.deleteAllCategories();
+      await database.deleteAllTransactions();
+      await Promise.all(
+        files.map(async file => {
+          const table = file.name.split(".").shift();
+          const content = await RNFS.readFile(file.path, "utf8");
+          const { data } = Papa.parse(content, { header: true });
+          if (table === constants.tables.CATEGORIES) {
+            await database.createCategories(data);
+            const [category] = data;
+            await AsyncStorage.setItem(
+              constants.storage.LAST_CATEGORY,
+              JSON.stringify(category),
+            );
+            state.updateCategory(category);
+          }
+          if (table === constants.tables.TRANSACTIONS) {
+            await database.createTransactions(data);
+          }
+        }),
+      );
+      await RNFS.unlink(folderPath);
+      state.updateCategories();
+      state.updateTransactions();
+      progress.hideProgressDialog();
+    } catch (error) {
+      console.log(error);
       progress.hideProgressDialog();
     }
   };
@@ -114,9 +161,19 @@ const Settings = props => {
     try {
       onDeleteModalClose();
       progress.showProgressDialog("Borrando datos");
+      await database.deleteAllCategories();
       await database.deleteAllTransactions();
+      await database.createCategories();
+      const [category] = await database.getCategories();
+      await AsyncStorage.setItem(
+        constants.storage.LAST_CATEGORY,
+        JSON.stringify(category),
+      );
+      state.updateCategory(category);
+      state.updateCategories();
       state.updateTransactions();
       progress.hideProgressDialog();
+      // TODO: Display some confirmation to the user
     } catch (_) {
       progress.hideProgressDialog();
     }
@@ -167,7 +224,7 @@ const Settings = props => {
         onPress={onExportData}
       />
       <Br size={1} />
-      <ButtonItem label="Importar datos" icon="upload" onPress={() => {}} />
+      <ButtonItem label="Importar datos" icon="upload" onPress={onImportData} />
       <Br size={1} />
       <ButtonItem
         borderBottomRadius

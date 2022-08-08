@@ -63,6 +63,23 @@ const executeSql = (sqlStatement, _arguments, callback, errorCallback) => {
   );
 };
 
+const createTransactions = (_transactions = []) =>
+  new Promise(resolve =>
+    executeSql(
+      `INSERT INTO ${
+        constants.tables.TRANSACTIONS
+      } (id,amount,category_id,date,description,is_income) VALUES ${_transactions
+        .map(
+          transaction =>
+            `(${transaction.id},${transaction.amount},${transaction.category_id},"${transaction.date}","${transaction.description}",${transaction.is_income})`,
+        )
+        .join(",")}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const createTransaction = (data = {}) =>
   new Promise(resolve =>
     executeSql(
@@ -141,12 +158,12 @@ const deleteAllTransactions = () =>
     ),
   );
 
-const createCategories = () =>
+const createCategories = (_categories = categories) =>
   new Promise(resolve =>
     executeSql(
       `INSERT INTO ${
         constants.tables.CATEGORIES
-      } (id,position,name,icon) VALUES ${categories
+      } (id,position,name,icon) VALUES ${_categories
         .map(
           category =>
             `(${category.id},${category.position},"${category.name}","${category.icon}")`,
@@ -210,6 +227,16 @@ const reorderCategories = (_categories = []) =>
     ),
   );
 
+const deleteAllCategories = () =>
+  new Promise(resolve =>
+    executeSql(
+      `DELETE FROM ${constants.tables.CATEGORIES}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const getAllTableData = (table = "") =>
   new Promise(resolve =>
     executeSql(
@@ -222,6 +249,7 @@ const getAllTableData = (table = "") =>
 
 const database = {
   configure,
+  createTransactions,
   createTransaction,
   getTransactions,
   updateTransaction,
@@ -233,6 +261,7 @@ const database = {
   createCategory,
   updateCategory,
   reorderCategories,
+  deleteAllCategories,
   getAllTableData,
 };
 

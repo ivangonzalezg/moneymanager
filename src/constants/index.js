@@ -16,6 +16,7 @@ const constants = {
     LAST_CATEGORY: "last_category",
     COLOR_MODE: "color_mode",
   },
+  BACKUP_FILE_NAME: "moneymanager.zip",
 };
 
 export default constants;
