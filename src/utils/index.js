@@ -11,7 +11,7 @@ const formatToCurrency = (number = 0) =>
   });
 
 const capitalize = (string = "") =>
-  `${string[0].toUpperCase()}${string.slice(1).toLowerCase()}`;
+  `${string[0]?.toUpperCase()}${string.slice(1)?.toLowerCase()}`;
 
 const isSameDate = (a = moment(), b = moment()) =>
   a.format(moment.HTML5_FMT.DATE) === b.format(moment.HTML5_FMT.DATE);
@@ -67,6 +67,7 @@ const openUrl = url =>
     .catch(() => {});
 
 export {
+  capitalize,
   formatToCurrency,
   formatDate,
   is24Hour,

@@ -2,6 +2,7 @@ import SQLite from "react-native-sqlite-storage";
 import moment from "moment";
 import constants from "../constants";
 import categories from "./categories";
+import { Platform } from "react-native";
 
 const dbName = "moneymanager.db";
 
@@ -97,21 +98,21 @@ const createTransaction = (data = {}) =>
 const getTransactions = () =>
   new Promise(resolve =>
     executeSql(
-      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN categories c ON t.category_id = c.id ORDER BY date DESC, id DESC`,
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ORDER BY date DESC, id DESC`,
       [],
       (_, results) => resolve(results.rows.raw()),
       () => resolve([]),
     ),
   );
 
-const getMonthBalance = () =>
+const getMonthBalance = (date = new Date().getTime()) =>
   new Promise(resolve =>
     executeSql(
       `SELECT SUM(CASE WHEN is_income = 1 THEN amount ELSE amount*-1 END) AS total FROM ${
         constants.tables.TRANSACTIONS
-      } WHERE date >= "${moment()
+      } WHERE date >= "${moment(date)
         .startOf("month")
-        .toISOString()}" AND date <= "${moment()
+        .toISOString()}" AND date <= "${moment(date)
         .endOf("month")
         .toISOString()}"`,
       [],
@@ -247,6 +248,38 @@ const getAllTableData = (table = "") =>
     ),
   );
 
+const getExpensesByCategory = (date = new Date().getTime()) =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT c.id AS id, c.name AS name, SUM(amount) AS total FROM ${
+        constants.tables.TRANSACTIONS
+      } t JOIN ${
+        constants.tables.CATEGORIES
+      } c ON t.category_id = c.id WHERE t.is_income = 0 AND date >= "${moment(
+        date,
+      )
+        .startOf("month")
+        .toISOString()}" AND date <= "${moment(date)
+        .endOf("month")
+        .toISOString()}" GROUP BY t.category_id ORDER BY total DESC`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
+const getMonths = () =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT substr(date,0,${Platform.OS === "ios" ? 7 : 8}) AS month FROM ${
+        constants.tables.TRANSACTIONS
+      } GROUP BY month ORDER BY month DESC`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
 const database = {
   configure,
   createTransactions,
@@ -263,6 +296,8 @@ const database = {
   reorderCategories,
   deleteAllCategories,
   getAllTableData,
+  getExpensesByCategory,
+  getMonths,
 };
 
 export default database;
