@@ -1,4 +1,4 @@
-package com.moneymanager;
+package co.ivangonzalez.moneymanager;
 
 import android.os.Bundle;
 

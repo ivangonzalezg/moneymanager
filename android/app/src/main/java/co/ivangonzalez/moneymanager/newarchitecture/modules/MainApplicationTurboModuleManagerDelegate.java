@@ -1,4 +1,4 @@
-package com.moneymanager.newarchitecture.modules;
+package co.ivangonzalez.moneymanager.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
