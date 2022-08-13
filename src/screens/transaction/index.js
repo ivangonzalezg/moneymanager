@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Animated, Dimensions, Platform } from "react-native";
 import {
   Actionsheet,
@@ -19,17 +13,14 @@ import {
   Input,
   Pressable,
   Text,
-  useColorMode,
   useDisclose,
 } from "native-base";
-import { VirtualKeyboard as RNVirtualKeyboard } from "react-native-screen-keyboard";
 import Feather from "react-native-vector-icons/Feather";
 import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import styles from "./styles";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
@@ -39,22 +30,9 @@ import { StateContext } from "../../contexts";
 import constants from "../../constants";
 import Emoji from "../../components/emoji";
 import { useKeyboardHeight } from "../../hooks";
+import VirtualKeyboard from "../../components/virtualKeyboard";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
-
-const VirtualKeyboard = React.memo(
-  RNVirtualKeyboard,
-  (prevProps, nextProps) =>
-    prevProps.amount === nextProps.amount &&
-    prevProps.colorMode === nextProps.colorMode,
-);
-
-const keyboard = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
-  [null, 0, <Icon as={Feather} name="delete" size={25} />],
-];
 
 const TransactionScreen = props => {
   const {
@@ -62,7 +40,6 @@ const TransactionScreen = props => {
     route: { params },
   } = props;
   const descriptionInput = useRef();
-  const { colorMode } = useColorMode();
   const keyboardHeight = useKeyboardHeight();
   const insets = useSafeAreaInsets();
   const state = useContext(StateContext);
@@ -107,7 +84,7 @@ const TransactionScreen = props => {
       toValue:
         virtualKeyboardHeight < keyboardHeight
           ? Platform.select({
-              android: 70,
+              android: 60,
               default:
                 keyboardHeight - virtualKeyboardHeight - insets.bottom + 12,
             })
@@ -125,22 +102,6 @@ const TransactionScreen = props => {
       descriptionInput.current.blur();
     }
   }, [isCategoryList, isDatePicker]);
-
-  const onPress = useCallback(
-    (value = "") => {
-      let _amount = String(amount);
-      if (value === "back") {
-        _amount = String(_amount).slice(0, -1);
-      } else if (value !== "custom") {
-        _amount = _amount + value;
-      }
-      if (_amount.length > 9) {
-        return;
-      }
-      setAmount(Number(_amount));
-    },
-    [amount],
-  );
 
   const onSave = async () => {
     try {
@@ -249,34 +210,7 @@ const TransactionScreen = props => {
           height: animatedHeight,
         }}
       />
-      <VirtualKeyboard
-        amount={amount}
-        colorMode={colorMode}
-        onKeyDown={onPress}
-        keyboardStyle={[
-          { height: virtualKeyboardHeight },
-          {
-            backgroundColor:
-              colorMode === "light"
-                ? colors.blueGray[50]
-                : colors.blueGray[900],
-          },
-        ]}
-        keyStyle={[
-          styles.key,
-          {
-            backgroundColor:
-              colorMode === "light"
-                ? colors.blueGray[50]
-                : colors.blueGray[900],
-          },
-        ]}
-        keyTextStyle={{
-          color:
-            colorMode === "light" ? colors.blueGray[900] : colors.blueGray[50],
-        }}
-        keyboard={keyboard}
-      />
+      <VirtualKeyboard height={virtualKeyboardHeight} onPress={setAmount} />
       <DatePicker
         modal
         androidVariant="nativeAndroid"

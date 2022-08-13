@@ -248,7 +248,7 @@ const Settings = props => {
           Versión {DeviceInfo.getVersion()} ({DeviceInfo.getBuildNumber()})
         </Text>
         <Pressable onPress={() => openUrl("https://ivangonzalez.co")}>
-          <Text fontSize="sm">Ivan Gonzalez</Text>
+          <Text fontSize="sm">Iván González</Text>
         </Pressable>
       </VStack>
       <AlertDialog
@@ -261,7 +261,7 @@ const Settings = props => {
           <AlertDialog.Body>
             <Text>
               ¿Estás seguro que deseas borrar los datos?{" "}
-              <Text bold>Estás acción no se puede deshacer</Text>
+              <Text bold>Está acción no se puede deshacer</Text>
             </Text>
           </AlertDialog.Body>
           <AlertDialog.Footer>
