@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
-import { useColorMode, Box, StatusBar, Icon } from "native-base";
+import {
+  useColorMode,
+  Box,
+  StatusBar,
+  Icon,
+  useColorModeValue,
+} from "native-base";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "react-native-splash-screen";
@@ -31,8 +37,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
-  const { colorMode } = useColorMode();
-
   return (
     <Tab.Navigator
       backBehavior="history"
@@ -42,15 +46,23 @@ const Tabs = () => {
         tabBarHideOnKeyboard: true,
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor:
-            colorMode === "light" ? colors.blueGray[200] : colors.blueGray[800],
-          borderTopColor:
-            colorMode === "light" ? colors.blueGray[400] : colors.blueGray[400],
+          backgroundColor: useColorModeValue(
+            colors.blueGray[200],
+            colors.blueGray[800],
+          ),
+          borderTopColor: useColorModeValue(
+            colors.blueGray[400],
+            colors.blueGray[400],
+          ),
         },
-        tabBarActiveTintColor:
-          colorMode === "light" ? colors.muted[800] : colors.muted[100],
-        tabBarInactiveTintColor:
-          colorMode === "light" ? colors.muted[400] : colors.muted[600],
+        tabBarActiveTintColor: useColorModeValue(
+          colors.muted[800],
+          colors.muted[100],
+        ),
+        tabBarInactiveTintColor: useColorModeValue(
+          colors.muted[400],
+          colors.muted[600],
+        ),
       }}>
       <Tab.Screen
         name={routes.home}
@@ -175,14 +187,11 @@ const App = () => {
             _light={{ bg: "blueGray.50" }}
             flex={1}>
             <StatusBar
-              backgroundColor={
-                colorMode === "light"
-                  ? colors.blueGray[50]
-                  : colors.blueGray[900]
-              }
-              barStyle={
-                colorMode === "light" ? "dark-content" : "light-content"
-              }
+              backgroundColor={useColorModeValue(
+                colors.blueGray[50],
+                colors.blueGray[900],
+              )}
+              barStyle={useColorModeValue("dark-content", "light-content")}
             />
             <Stack.Navigator
               screenOptions={{ headerShown: false }}
