@@ -19,7 +19,7 @@ const KeyboardKey = React.memo(({ value, onPress, children }) => (
 
 const VirtualKeyboard = props => {
   const { height } = props;
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(props.amount || 0);
 
   const onPress = useCallback(
     (value = "") => {

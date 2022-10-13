@@ -210,7 +210,11 @@ const TransactionScreen = props => {
           height: animatedHeight,
         }}
       />
-      <VirtualKeyboard height={virtualKeyboardHeight} onPress={setAmount} />
+      <VirtualKeyboard
+        height={virtualKeyboardHeight}
+        amount={amount}
+        onPress={setAmount}
+      />
       <DatePicker
         modal
         androidVariant="nativeAndroid"
