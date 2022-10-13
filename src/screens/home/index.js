@@ -19,6 +19,7 @@ import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import Container from "../../components/container";
 import {
+  filterTransactions,
   formatToCurrency,
   transformTransactionsIntoSections,
 } from "../../utils";
@@ -43,7 +44,11 @@ const HomeScreen = props => {
       setMonthBalance(_monthBalance);
       const _transactions = await database.getTransactions();
       setTransactions(_transactions);
-      setSections(transformTransactionsIntoSections(_transactions));
+      setSections(
+        transformTransactionsIntoSections(
+          filterTransactions(query, _transactions),
+        ),
+      );
     } catch (_) {}
     setIsRefreshing(false);
   };
@@ -52,23 +57,11 @@ const HomeScreen = props => {
     getTransactions();
   }, [state.transactions, state.categories]);
 
-  const filterTransactions = useCallback(
+  const onfilterTransactions = useCallback(
     (_query = "") => {
       setSections(
         transformTransactionsIntoSections(
-          _query
-            ? transactions.filter(
-                transaction =>
-                  (Number.isInteger(Number(_query)) &&
-                    transaction.amount === Number(_query)) ||
-                  transaction.categoryName
-                    .toLowerCase()
-                    .includes(_query.toLowerCase()) ||
-                  transaction.description
-                    .toLowerCase()
-                    .includes(_query.toLowerCase()),
-              )
-            : transactions,
+          filterTransactions(_query, transactions),
         ),
       );
     },
@@ -92,7 +85,7 @@ const HomeScreen = props => {
           flex={1}
           value={query}
           onChangeText={setQuery}
-          onSubmitEditing={() => filterTransactions(query)}
+          onSubmitEditing={() => onfilterTransactions(query)}
           InputLeftElement={
             <Icon as={Feather} name="search" my={2} ml={2} size={6} />
           }
@@ -101,7 +94,7 @@ const HomeScreen = props => {
               <Pressable
                 onPress={() => {
                   setQuery("");
-                  filterTransactions();
+                  onfilterTransactions();
                 }}>
                 <Icon as={Feather} name="x" my={2} mx={1} size={6} />
               </Pressable>
