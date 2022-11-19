@@ -6,6 +6,7 @@ const routes = {
   settings: "settings",
   categories: "categories",
   category: "category",
+  appearance: "appearance",
 };
 
 export default routes;

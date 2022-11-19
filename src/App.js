@@ -32,6 +32,7 @@ import ChartsScreen from "./screens/charts";
 import SettingsScreen from "./screens/settings";
 import CategoriesScreen from "./screens/categories";
 import CategoryScreen from "./screens/category";
+import AppearanceScreen from "./screens/appearance";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -210,6 +211,10 @@ const App = () => {
                 name={routes.category}
                 component={CategoryScreen}
                 initialParams={{}}
+              />
+              <Stack.Screen
+                name={routes.appearance}
+                component={AppearanceScreen}
               />
             </Stack.Navigator>
           </Box>

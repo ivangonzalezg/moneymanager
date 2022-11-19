@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import {
   AlertDialog,
   Button,
@@ -6,9 +6,7 @@ import {
   HStack,
   Icon,
   Pressable,
-  Switch,
   Text,
-  useColorMode,
   useDisclose,
   VStack,
 } from "native-base";
@@ -60,7 +58,7 @@ const ButtonItem = React.memo(props => {
 
 const Settings = props => {
   const { navigation } = props;
-  const { colorMode, toggleColorMode } = useColorMode();
+
   const progress = useContext(ProgressContext);
   const state = useContext(StateContext);
   const {
@@ -68,14 +66,6 @@ const Settings = props => {
     onOpen: onDeleteModalOpen,
     onClose: onDeleteModalClose,
   } = useDisclose();
-
-  const onToggleColorMode = useCallback(() => {
-    AsyncStorage.setItem(
-      constants.storage.COLOR_MODE,
-      colorMode === "light" ? "dark" : "light",
-    );
-    toggleColorMode();
-  }, [colorMode, toggleColorMode]);
 
   const onExportData = async () => {
     try {
@@ -183,24 +173,16 @@ const Settings = props => {
       <Heading textAlign="center" mt={2} mb={10}>
         Ajustes
       </Heading>
-      <HStack
-        space={5}
-        alignItems="center"
-        px={3}
-        minH="60px"
-        borderTopRadius="xl"
-        _light={{ bg: colors.blueGray[200] }}
-        _dark={{ bg: colors.blueGray[800] }}>
-        <Icon as={Feather} name="moon" size="lg" />
-        <Text flex={1}>Modo oscuro</Text>
-        <Switch
-          colorScheme="blueGray"
-          isChecked={colorMode === "dark"}
-          onToggle={onToggleColorMode}
-        />
-      </HStack>
-      <Br size={1} />
       <ButtonItem
+        borderTopRadius
+        borderBottomRadius
+        label="Apariencia"
+        icon="layout"
+        onPress={() => navigation.navigate(routes.appearance)}
+      />
+      <Br />
+      <ButtonItem
+        borderTopRadius
         borderBottomRadius
         label="Notificaciones"
         icon="bell"
