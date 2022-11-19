@@ -79,7 +79,7 @@ const Tabs = () => {
         component={ChartsScreen}
         options={{
           tabBarIcon: props => (
-            <Icon as={Feather} name="bar-chart-2" size="xl" {...props} />
+            <Icon as={Feather} name="pie-chart" size="xl" {...props} />
           ),
         }}
       />
