@@ -40,6 +40,7 @@ const Categories = props => {
         })),
       );
       state.updateCategories();
+      state.updateTransactions();
     } catch (_) {}
     setIsSaving(false);
   };

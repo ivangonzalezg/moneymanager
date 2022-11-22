@@ -37,7 +37,7 @@ const Appearance = () => {
 
   return (
     <Container disableFeedback safeAreaTop safeAreaBottom>
-      <HStack alignItems="center" mt={2} mb={10}>
+      <HStack alignItems="center" mt={2} mb={5}>
         <BackButton />
         <Heading flex={1} textAlign="center">
           Apariencia

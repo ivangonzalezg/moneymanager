@@ -58,7 +58,6 @@ const ButtonItem = React.memo(props => {
 
 const Settings = props => {
   const { navigation } = props;
-
   const progress = useContext(ProgressContext);
   const state = useContext(StateContext);
   const {
@@ -186,8 +185,7 @@ const Settings = props => {
         borderBottomRadius
         label="Notificaciones"
         icon="bell"
-        onPress={() => {}}
-        disabled
+        onPress={() => navigation.navigate(routes.notifications)}
       />
       <Br />
       <ButtonItem

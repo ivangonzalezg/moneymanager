@@ -12,6 +12,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "react-native-splash-screen";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -33,11 +34,36 @@ import SettingsScreen from "./screens/settings";
 import CategoriesScreen from "./screens/categories";
 import CategoryScreen from "./screens/category";
 import AppearanceScreen from "./screens/appearance";
+import NotificationsScreen from "./screens/notifications";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const Tabs = () => {
+const Tabs = props => {
+  const { navigation } = props;
+
+  const onNotification = () => {
+    PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    navigation.navigate(routes.transaction);
+  };
+
+  useEffect(() => {
+    PushNotificationIOS.getInitialNotification().then(notification => {
+      if (notification) {
+        onNotification();
+      }
+    });
+    PushNotificationIOS.addEventListener("localNotification", notification => {
+      if (notification.getData().userInteraction === 1) {
+        onNotification();
+      }
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+    });
+    return () => {
+      PushNotificationIOS.removeEventListener("localNotification");
+    };
+  }, []);
+
   return (
     <Tab.Navigator
       backBehavior="history"
@@ -69,8 +95,8 @@ const Tabs = () => {
         name={routes.home}
         component={HomeScreen}
         options={{
-          tabBarIcon: props => (
-            <Icon as={Feather} name="inbox" size="xl" {...props} />
+          tabBarIcon: _props => (
+            <Icon as={Feather} name="inbox" size="xl" {..._props} />
           ),
         }}
       />
@@ -78,8 +104,8 @@ const Tabs = () => {
         name={routes.charts}
         component={ChartsScreen}
         options={{
-          tabBarIcon: props => (
-            <Icon as={Feather} name="pie-chart" size="xl" {...props} />
+          tabBarIcon: _props => (
+            <Icon as={Feather} name="pie-chart" size="xl" {..._props} />
           ),
         }}
       />
@@ -87,8 +113,8 @@ const Tabs = () => {
         name={routes.settings}
         component={SettingsScreen}
         options={{
-          tabBarIcon: props => (
-            <Icon as={Feather} name="settings" size="xl" {...props} />
+          tabBarIcon: _props => (
+            <Icon as={Feather} name="settings" size="xl" {..._props} />
           ),
         }}
       />
@@ -215,6 +241,10 @@ const App = () => {
               <Stack.Screen
                 name={routes.appearance}
                 component={AppearanceScreen}
+              />
+              <Stack.Screen
+                name={routes.notifications}
+                component={NotificationsScreen}
               />
             </Stack.Navigator>
           </Box>

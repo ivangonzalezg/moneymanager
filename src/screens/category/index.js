@@ -51,6 +51,7 @@ const Category = props => {
         await database.createCategory(data);
       }
       state.updateCategories();
+      state.updateTransactions();
       navigation.goBack();
     } catch (_) {}
   };

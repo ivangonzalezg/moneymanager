@@ -55,7 +55,7 @@ const HomeScreen = props => {
 
   useEffect(() => {
     getTransactions();
-  }, [state.transactions, state.categories]);
+  }, [state.transactions]);
 
   const onfilterTransactions = useCallback(
     (_query = "") => {

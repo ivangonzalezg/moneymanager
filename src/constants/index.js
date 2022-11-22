@@ -17,6 +17,7 @@ const constants = {
     COLOR_MODE: "color_mode",
   },
   BACKUP_FILE_NAME: "moneymanager.zip",
+  notificationId: "reminders",
 };
 
 export default constants;
