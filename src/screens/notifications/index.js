@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Platform } from "react-native";
 import {
   Button,
   Heading,
@@ -8,7 +9,6 @@ import {
   Text,
   useDisclose,
 } from "native-base";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import DatePicker from "react-native-date-picker";
 import moment from "moment";
 import Container from "../../components/container";
@@ -16,6 +16,7 @@ import BackButton from "../../components/backButton";
 import { ProgressContext } from "../../contexts";
 import constants from "../../constants";
 import { is24Hour } from "../../utils";
+import notificationService from "../../utils/notificationService";
 
 const Notifications = () => {
   const progress = useContext(ProgressContext);
@@ -29,9 +30,11 @@ const Notifications = () => {
 
   useEffect(() => {
     progress.showProgressDialog("");
-    PushNotificationIOS.getPendingNotificationRequests(notifications => {
+    notificationService.getScheduledNotifications(notifications => {
       const notification = notifications.find(
-        _notification => _notification.id === constants.notificationId,
+        _notification =>
+          _notification.id === constants.notificationId ||
+          Platform.OS === "android",
       );
       const _isActivated = Boolean(notification);
       setIsActivated(_isActivated);
@@ -49,39 +52,14 @@ const Notifications = () => {
 
   const onSave = async () => {
     if (isActivated) {
-      const permissionResult = await new Promise(resolve => {
-        PushNotificationIOS.checkPermissions(async permissions => {
-          if (Object.values(permissions).includes(false)) {
-            try {
-              await PushNotificationIOS.requestPermissions({
-                alert: true,
-                sound: true,
-                badge: true,
-              });
-              resolve(true);
-            } catch (error) {}
-          } else {
-            resolve(true);
-          }
-        });
-      });
+      const permissionResult = await notificationService.checkPermissions();
       if (permissionResult) {
-        PushNotificationIOS.addNotificationRequest({
-          id: constants.notificationId,
-          title: "Recordatorio diario",
-          body: "Es tiempo de guardar tus gastos",
-          fireDate: date,
-          repeats: true,
-          repeatsComponent: {
-            hour: true,
-            minute: true,
-          },
-          badge: 1,
-        });
+        notificationService.createScheduledNotifications(date);
       } else {
+        // TODO: Show some alert about permissions denied
       }
     } else {
-      PushNotificationIOS.removeAllPendingNotificationRequests();
+      notificationService.cancelScheduledNotifications();
     }
   };
 
@@ -113,16 +91,7 @@ const Notifications = () => {
         Guardar
       </Button>
       {__DEV__ && (
-        <Button
-          mt={5}
-          onPress={() =>
-            PushNotificationIOS.addNotificationRequest({
-              id: constants.notificationId,
-              title: "Recordatorio diario",
-              body: "Es tiempo de guardar tus gastos",
-              badge: 1,
-            })
-          }>
+        <Button mt={5} onPress={notificationService.test}>
           Test
         </Button>
       )}

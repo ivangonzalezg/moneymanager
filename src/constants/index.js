@@ -18,6 +18,7 @@ const constants = {
   },
   BACKUP_FILE_NAME: "moneymanager.zip",
   notificationId: "reminders",
+  channelId: "moneymanager",
 };
 
 export default constants;

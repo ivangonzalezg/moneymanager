@@ -12,7 +12,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SplashScreen from "react-native-splash-screen";
 import Feather from "react-native-vector-icons/Feather";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import ProgressDialog from "./components/progressDialog";
 import {
   initialProgress,
@@ -26,6 +25,7 @@ import constants from "./constants";
 import colors from "./constants/colors";
 import routes from "./routes";
 import database from "./database";
+import notificationService from "./utils/notificationService";
 
 import HomeScreen from "./screens/home";
 import TransactionScreen from "./screens/transaction";
@@ -42,26 +42,11 @@ const Tab = createBottomTabNavigator();
 const Tabs = props => {
   const { navigation } = props;
 
-  const onNotification = () => {
-    PushNotificationIOS.setApplicationIconBadgeNumber(0);
-    navigation.navigate(routes.transaction);
-  };
+  const onNotification = () => navigation.navigate(routes.transaction);
 
   useEffect(() => {
-    PushNotificationIOS.getInitialNotification().then(notification => {
-      if (notification) {
-        onNotification();
-      }
-    });
-    PushNotificationIOS.addEventListener("localNotification", notification => {
-      if (notification.getData().userInteraction === 1) {
-        onNotification();
-      }
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    });
-    return () => {
-      PushNotificationIOS.removeEventListener("localNotification");
-    };
+    notificationService.getInitialNotification(onNotification);
+    notificationService.startListener(onNotification);
   }, []);
 
   return (

@@ -31,6 +31,7 @@ import constants from "../../constants";
 import Emoji from "../../components/emoji";
 import { useKeyboardHeight } from "../../hooks";
 import VirtualKeyboard from "../../components/virtualKeyboard";
+import notificationService from "../../utils/notificationService";
 
 const virtualKeyboardHeight = Dimensions.get("screen").height * 0.325;
 
@@ -73,6 +74,7 @@ const TransactionScreen = props => {
   } = useDisclose();
 
   useEffect(() => {
+    notificationService.clearBadge();
     RNAndroidKeyboardAdjust.setAdjustPan();
     return () => {
       RNAndroidKeyboardAdjust.setAdjustResize();
