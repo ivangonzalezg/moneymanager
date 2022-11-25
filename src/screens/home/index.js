@@ -146,7 +146,7 @@ const HomeScreen = props => {
             <Divider mt={2} />
           </Box>
         )}
-        renderItem={info => <TransactionCard {...info} />}
+        renderItem={TransactionCard}
         showsVerticalScrollIndicator={false}
         keyExtractor={item => String(item.id)}
         contentContainerStyle={sections.length === 0 && styles.contentContainer}
