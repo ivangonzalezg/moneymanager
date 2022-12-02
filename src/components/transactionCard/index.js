@@ -43,4 +43,4 @@ const TransactionCard = props => {
   );
 };
 
-export default React.memo(TransactionCard);
+export default TransactionCard;
