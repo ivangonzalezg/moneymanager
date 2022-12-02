@@ -1,9 +1,8 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import {
-  Box,
+  Button,
   Center,
-  Divider,
   Heading,
   HStack,
   Icon,
@@ -27,6 +26,7 @@ import routes from "../../routes";
 import { StateContext } from "../../contexts";
 import database from "../../database";
 import TransactionCard from "../../components/transactionCard";
+import TransactionHeader from "../../components/transactionHeader";
 
 const HomeScreen = props => {
   const { navigation } = props;
@@ -117,7 +117,7 @@ const HomeScreen = props => {
       <SectionList
         refreshControl={<RefreshControl refreshing={isRefreshing} />}
         ListHeaderComponent={() => (
-          <Center mt={10}>
+          <Center mt={5}>
             <Text fontSize="sm" opacity={70}>
               Balance de este mes
             </Text>
@@ -130,22 +130,7 @@ const HomeScreen = props => {
           </Center>
         )}
         sections={sections}
-        renderSectionHeader={({ section }) => (
-          <Box
-            pt={10}
-            _dark={{ bg: "blueGray.900" }}
-            _light={{ bg: "blueGray.50" }}>
-            <HStack justifyContent="space-between" alignItems="center">
-              <Text fontSize="sm" opacity={70}>
-                {section.title}
-              </Text>
-              <Text fontSize="sm" opacity={70}>
-                {formatToCurrency(section.total)}
-              </Text>
-            </HStack>
-            <Divider mt={2} />
-          </Box>
-        )}
+        renderSectionHeader={TransactionHeader}
         renderItem={TransactionCard}
         showsVerticalScrollIndicator={false}
         keyExtractor={item => String(item.id)}
