@@ -13,13 +13,11 @@ import DatePicker from "react-native-date-picker";
 import moment from "moment";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
-import { ProgressContext } from "../../contexts";
 import constants from "../../constants";
 import { is24Hour } from "../../utils";
 import notificationService from "../../utils/notificationService";
 
 const Notifications = () => {
-  const progress = useContext(ProgressContext);
   const [isActivated, setIsActivated] = useState(false);
   const {
     isOpen: isDatePicker,
@@ -29,7 +27,6 @@ const Notifications = () => {
   const [date, setDate] = useState(moment("20:00:00", "HH:mm:ss").toDate());
 
   useEffect(() => {
-    progress.showProgressDialog("");
     notificationService.getScheduledNotifications(notifications => {
       const notification = notifications.find(
         _notification =>
@@ -46,7 +43,6 @@ const Notifications = () => {
           ).toDate(),
         );
       }
-      progress.hideProgressDialog();
     });
   }, []);
 
