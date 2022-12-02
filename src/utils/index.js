@@ -53,6 +53,7 @@ const transformTransactionsIntoSections = (transactions = []) => {
         transaction =>
           moment(transaction.date).format(moment.HTML5_FMT.DATE) === date,
       )
+      .filter(transaction => !transaction.is_income)
       .reduce((total, transaction) => total + transaction.amount, 0),
     data: transactions.filter(
       transaction =>
