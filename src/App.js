@@ -158,7 +158,6 @@ const App = () => {
         toggleColorMode();
       }
       await database.configure();
-      dispatchState({ type: constants.state.TRANSACTIONS });
       await database.createCategories();
       const categories = await database.getCategories();
       dispatchState({ type: constants.state.CATEGORIES, categories });
@@ -205,33 +204,35 @@ const App = () => {
               )}
               barStyle={useColorModeValue("dark-content", "light-content")}
             />
-            <Stack.Navigator
-              screenOptions={{ headerShown: false }}
-              initialRouteName={routes.tabs}>
-              <Stack.Screen name={routes.tabs} component={Tabs} />
-              <Stack.Screen
-                name={routes.transaction}
-                component={TransactionScreen}
-                initialParams={{}}
-              />
-              <Stack.Screen
-                name={routes.categories}
-                component={CategoriesScreen}
-              />
-              <Stack.Screen
-                name={routes.category}
-                component={CategoryScreen}
-                initialParams={{}}
-              />
-              <Stack.Screen
-                name={routes.appearance}
-                component={AppearanceScreen}
-              />
-              <Stack.Screen
-                name={routes.notifications}
-                component={NotificationsScreen}
-              />
-            </Stack.Navigator>
+            {!isSplashScreen && (
+              <Stack.Navigator
+                screenOptions={{ headerShown: false }}
+                initialRouteName={routes.tabs}>
+                <Stack.Screen name={routes.tabs} component={Tabs} />
+                <Stack.Screen
+                  name={routes.transaction}
+                  component={TransactionScreen}
+                  initialParams={{}}
+                />
+                <Stack.Screen
+                  name={routes.categories}
+                  component={CategoriesScreen}
+                />
+                <Stack.Screen
+                  name={routes.category}
+                  component={CategoryScreen}
+                  initialParams={{}}
+                />
+                <Stack.Screen
+                  name={routes.appearance}
+                  component={AppearanceScreen}
+                />
+                <Stack.Screen
+                  name={routes.notifications}
+                  component={NotificationsScreen}
+                />
+              </Stack.Navigator>
+            )}
           </Box>
           <ProgressDialog visible={progress.visible} label={progress.label} />
         </StateContext.Provider>

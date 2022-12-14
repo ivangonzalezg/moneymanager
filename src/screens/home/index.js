@@ -36,14 +36,21 @@ const HomeScreen = props => {
   const [sections, setSections] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [query, setQuery] = useState("");
+  const [offset, setOffset] = useState(0);
+  const [areMoreTransactions, setAreMoreTransactions] = useState(false);
 
-  const getTransactions = async () => {
+  const getTransactions = async (_offset = 0) => {
     try {
       setIsRefreshing(true);
       const _monthBalance = await database.getMonthBalance();
       setMonthBalance(_monthBalance);
-      const _transactions = await database.getTransactions();
+      let _transactions = await database.getTransactions(_offset);
+      if (offset > 0) {
+        _transactions = [...transactions, ..._transactions];
+      }
       setTransactions(_transactions);
+      const _numberOfTransactions = await database.getNumberOfTransactions();
+      setAreMoreTransactions(_numberOfTransactions > _transactions.length);
       setSections(
         transformTransactionsIntoSections(
           filterTransactions(query, _transactions),
@@ -54,8 +61,20 @@ const HomeScreen = props => {
   };
 
   useEffect(() => {
-    getTransactions();
+    if (state.transactions) {
+      setOffset(_offset => {
+        if (_offset) {
+          return 0;
+        }
+        getTransactions();
+        return _offset;
+      });
+    }
   }, [state.transactions]);
+
+  useEffect(() => {
+    getTransactions(offset);
+  }, [offset]);
 
   const onfilterTransactions = useCallback(
     (_query = "") => {
@@ -143,6 +162,17 @@ const HomeScreen = props => {
                 No se ha encontrado ninguna transacción
               </Text>
             </Center>
+          )
+        }
+        ListFooterComponent={
+          areMoreTransactions && (
+            <Button
+              my={5}
+              onPress={() => setOffset(offset + 20)}
+              isLoading={isRefreshing}
+              isLoadingText="Cargando...">
+              Cargar más
+            </Button>
           )
         }
       />

@@ -33,7 +33,7 @@ const ProgressDialog = props => {
       justifyContent="center"
       style={styles.container}>
       <Box
-        _light={{ bg: "lightBlue.50" }}
+        _light={{ bg: "blueGray.50" }}
         _dark={{ bg: "lightBlue.900" }}
         px={7}
         py={4}

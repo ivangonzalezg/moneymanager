@@ -95,16 +95,6 @@ const createTransaction = (data = {}) =>
     ),
   );
 
-const getTransactions = () =>
-  new Promise(resolve =>
-    executeSql(
-      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ORDER BY date DESC, id DESC`,
-      [],
-      (_, results) => resolve(results.rows.raw()),
-      () => resolve([]),
-    ),
-  );
-
 const getMonthBalance = (date = new Date().getTime()) =>
   new Promise(resolve =>
     executeSql(
@@ -115,6 +105,32 @@ const getMonthBalance = (date = new Date().getTime()) =>
         .toISOString()}" AND date <= "${moment(date)
         .endOf("month")
         .toISOString()}"`,
+      [],
+      (_, results) => {
+        if (results.rows.item(0).total !== null) {
+          resolve(results.rows.item(0).total);
+        } else {
+          resolve(0);
+        }
+      },
+      () => resolve(0),
+    ),
+  );
+
+const getTransactions = (offset = 0) =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ORDER BY date DESC, id DESC LIMIT 20 OFFSET ${offset}`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
+const getNumberOfTransactions = () =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT COUNT(t.id) AS total FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id`,
       [],
       (_, results) => {
         if (results.rows.item(0).total !== null) {
@@ -285,6 +301,7 @@ const database = {
   createTransactions,
   createTransaction,
   getTransactions,
+  getNumberOfTransactions,
   updateTransaction,
   deleteTransaction,
   deleteAllTransactions,
