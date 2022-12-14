@@ -67,19 +67,6 @@ const openUrl = url =>
     .then(supported => supported && Linking.openURL(url))
     .catch(() => {});
 
-const filterTransactions = (query = "", transactions = []) =>
-  query
-    ? transactions.filter(
-        transaction =>
-          (Number.isInteger(Number(query)) &&
-            transaction.amount === Number(query)) ||
-          transaction.categoryName
-            .toLowerCase()
-            .includes(query.toLowerCase()) ||
-          transaction.description.toLowerCase().includes(query.toLowerCase()),
-      )
-    : transactions;
-
 export {
   capitalize,
   formatToCurrency,
@@ -88,5 +75,4 @@ export {
   getCategory,
   transformTransactionsIntoSections,
   openUrl,
-  filterTransactions,
 };

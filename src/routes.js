@@ -8,6 +8,7 @@ const routes = {
   category: "category",
   appearance: "appearance",
   notifications: "notifications",
+  search: "search",
 };
 
 export default routes;

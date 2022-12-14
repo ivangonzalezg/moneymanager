@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { RefreshControl } from "react-native";
 import {
   Button,
@@ -7,7 +7,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Input,
   Pressable,
   SectionList,
   Text,
@@ -18,7 +17,6 @@ import Feather from "react-native-vector-icons/Feather";
 import styles from "./styles";
 import Container from "../../components/container";
 import {
-  filterTransactions,
   formatToCurrency,
   transformTransactionsIntoSections,
 } from "../../utils";
@@ -35,7 +33,6 @@ const HomeScreen = props => {
   const [transactions, setTransactions] = useState([]);
   const [sections, setSections] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
-  const [query, setQuery] = useState("");
   const [offset, setOffset] = useState(0);
   const [areMoreTransactions, setAreMoreTransactions] = useState(false);
 
@@ -51,11 +48,7 @@ const HomeScreen = props => {
       setTransactions(_transactions);
       const _numberOfTransactions = await database.getNumberOfTransactions();
       setAreMoreTransactions(_numberOfTransactions > _transactions.length);
-      setSections(
-        transformTransactionsIntoSections(
-          filterTransactions(query, _transactions),
-        ),
-      );
+      setSections(transformTransactionsIntoSections(_transactions));
     } catch (_) {}
     setIsRefreshing(false);
   };
@@ -76,17 +69,6 @@ const HomeScreen = props => {
     getTransactions(offset);
   }, [offset]);
 
-  const onfilterTransactions = useCallback(
-    (_query = "") => {
-      setSections(
-        transformTransactionsIntoSections(
-          filterTransactions(_query, transactions),
-        ),
-      );
-    },
-    [transactions],
-  );
-
   return (
     <Container noScroll disableFeedback safeAreaTop>
       <HStack
@@ -95,31 +77,12 @@ const HomeScreen = props => {
         justifyContent="space-between"
         alignItems="center"
         space={5}>
-        <Input
-          autoCapitalize="sentences"
-          placeholder="Busca movimientos"
-          fontSize="sm"
-          variant="unstyled"
-          returnKeyType="search"
-          flex={1}
-          value={query}
-          onChangeText={setQuery}
-          onSubmitEditing={() => onfilterTransactions(query)}
-          InputLeftElement={
-            <Icon as={Feather} name="search" my={2} ml={2} size={6} />
-          }
-          InputRightElement={
-            query && (
-              <Pressable
-                onPress={() => {
-                  setQuery("");
-                  onfilterTransactions();
-                }}>
-                <Icon as={Feather} name="x" my={2} mx={1} size={6} />
-              </Pressable>
-            )
-          }
-        />
+        <Pressable flex={1} onPress={() => navigation.navigate(routes.search)}>
+          <HStack alignItems="center">
+            <Icon as={Feather} name="search" my={2} mx={2} size={6} />
+            <Text opacity={50}>Busca movimientos</Text>
+          </HStack>
+        </Pressable>
         <VStack>
           <IconButton
             p={1}

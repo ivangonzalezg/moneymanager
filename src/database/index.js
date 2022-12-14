@@ -117,20 +117,32 @@ const getMonthBalance = (date = new Date().getTime()) =>
     ),
   );
 
-const getTransactions = (offset = 0) =>
+const getTransactions = (offset = 0, query = "") =>
   new Promise(resolve =>
     executeSql(
-      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ORDER BY date DESC, id DESC LIMIT 20 OFFSET ${offset}`,
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${
+        constants.tables.TRANSACTIONS
+      } t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ${
+        query
+          ? `WHERE t.amount = "${query}" OR c.name LIKE "%${query}%" OR t.description LIKE "%${query}%"`
+          : ""
+      } ORDER BY date DESC, id DESC LIMIT 20 OFFSET ${offset}`,
       [],
       (_, results) => resolve(results.rows.raw()),
       () => resolve([]),
     ),
   );
 
-const getNumberOfTransactions = () =>
+const getNumberOfTransactions = (query = "") =>
   new Promise(resolve =>
     executeSql(
-      `SELECT COUNT(t.id) AS total FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id`,
+      `SELECT COUNT(t.id) AS total FROM ${
+        constants.tables.TRANSACTIONS
+      } t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ${
+        query
+          ? `WHERE t.amount = "${query}" OR c.name LIKE "%${query}%" OR t.description LIKE "%${query}%"`
+          : ""
+      }`,
       [],
       (_, results) => {
         if (results.rows.item(0).total !== null) {

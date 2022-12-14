@@ -35,6 +35,7 @@ import CategoriesScreen from "./screens/categories";
 import CategoryScreen from "./screens/category";
 import AppearanceScreen from "./screens/appearance";
 import NotificationsScreen from "./screens/notifications";
+import SearchScreen from "./screens/search";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -231,6 +232,7 @@ const App = () => {
                   name={routes.notifications}
                   component={NotificationsScreen}
                 />
+                <Stack.Screen name={routes.search} component={SearchScreen} />
               </Stack.Navigator>
             )}
           </Box>
