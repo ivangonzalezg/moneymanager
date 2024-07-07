@@ -67,6 +67,9 @@ const openUrl = url =>
     .then(supported => supported && Linking.openURL(url))
     .catch(() => {});
 
+const getClient = (id = 0, clients = []) =>
+  clients.find(client => client.id === id) || null;
+
 export {
   capitalize,
   formatToCurrency,
@@ -75,4 +78,5 @@ export {
   getCategory,
   transformTransactionsIntoSections,
   openUrl,
+  getClient,
 };

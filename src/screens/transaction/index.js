@@ -20,15 +20,12 @@ import moment from "moment";
 import DatePicker from "react-native-date-picker";
 import RNAndroidKeyboardAdjust from "rn-android-keyboard-adjust";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import colors from "../../constants/colors";
-import { formatDate, formatToCurrency, getCategory } from "../../utils";
+import { formatDate, formatToCurrency, getClient } from "../../utils";
 import database from "../../database";
 import { StateContext } from "../../contexts";
-import constants from "../../constants";
-import Emoji from "../../components/emoji";
 import { useKeyboardHeight } from "../../hooks";
 import VirtualKeyboard from "../../components/virtualKeyboard";
 import notificationService from "../../utils/notificationService";
@@ -45,13 +42,13 @@ const TransactionScreen = props => {
   const insets = useSafeAreaInsets();
   const state = useContext(StateContext);
   const [amount, setAmount] = useState(params.amount || 0);
-  const [category, setCategory] = useState(
-    getCategory(params?.category_id, state.categories) || state.category,
+  const [client, setClient] = useState(
+    getClient(params?.client_id, state.clients),
   );
   const {
-    isOpen: isCategoryList,
-    onOpen: onOpenCategoryList,
-    onClose: onCloseCategoryList,
+    isOpen: isClientList,
+    onOpen: onOpenClientList,
+    onClose: onCloseClientList,
   } = useDisclose();
   const [date, setDate] = useState(
     moment(params.date)
@@ -98,19 +95,19 @@ const TransactionScreen = props => {
 
   useEffect(() => {
     if (
-      (isCategoryList || isDatePicker) &&
+      (isClientList || isDatePicker) &&
       descriptionInput.current.isFocused()
     ) {
       descriptionInput.current.blur();
     }
-  }, [isCategoryList, isDatePicker]);
+  }, [isClientList, isDatePicker]);
 
   const onSave = async () => {
     try {
       setIsSaving(true);
       const data = {
         amount,
-        category_id: category.id,
+        client_id: client?.id,
         date: date.toISOString(),
         description,
         is_income: Number(isIncome),
@@ -120,11 +117,6 @@ const TransactionScreen = props => {
       } else {
         await database.createTransaction(data);
       }
-      await AsyncStorage.setItem(
-        constants.storage.LAST_CATEGORY,
-        JSON.stringify(category),
-      );
-      state.updateCategory(category);
       state.updateTransactions();
       navigation.goBack();
     } catch (_) {}
@@ -148,7 +140,7 @@ const TransactionScreen = props => {
             alignItems="center"
             justifyContent="center"
             space={1}>
-            <Heading>{isIncome ? "Ingreso" : "Gasto"}</Heading>
+            <Heading>{isIncome ? "Pago" : "Venta"}</Heading>
             <Icon as={Feather} name="chevron-down" size="lg" />
           </HStack>
         </Pressable>
@@ -181,26 +173,28 @@ const TransactionScreen = props => {
           value={description}
           onChangeText={setDescription}
         />
-        <Button disabled={!amount || isSaving} onPress={onSave}>
+        <Button disabled={!amount || !client || isSaving} onPress={onSave}>
           Guardar
         </Button>
       </HStack>
       <Divider />
       <HStack alignItems="center">
-        <Pressable py={3} pl={2} pr={3} onPress={onOpenDatePicker}>
+        <Pressable
+          paddingY={3}
+          paddingLeft={2}
+          paddingRight={3}
+          onPress={onOpenDatePicker}>
           <Text>{formatDate(moment(date))}</Text>
         </Pressable>
         <Pressable
           flex={1}
-          h="full"
-          py={2}
-          pl={3}
-          pr={2}
-          onPress={onOpenCategoryList}>
-          <HStack alignItems="center" space={2}>
-            <Emoji shortName={category.icon} fontSize="xl" />
+          paddingY={2}
+          paddingLeft={3}
+          paddingRight={2}
+          onPress={onOpenClientList}>
+          <HStack alignItems="center" space={2} opacity={client?.id ? 1 : 0.5}>
             <Text flex={1} numberOfLines={1}>
-              {category.name}
+              {client?.name || "Cliente"}
             </Text>
             <Icon as={Feather} name="chevron-down" size={25} />
           </HStack>
@@ -233,16 +227,16 @@ const TransactionScreen = props => {
         onCancel={onCloseDatePicker}
       />
       <Actionsheet
-        isOpen={isCategoryList}
-        onClose={onCloseCategoryList}
+        isOpen={isClientList}
+        onClose={onCloseClientList}
         _backdrop={{ _pressed: { opacity: 0.3 } }}>
         <Actionsheet.Content>
           <FlatList
             w="100%"
-            data={state.categories}
+            data={state.clients}
             renderItem={({ item }) => (
               <Actionsheet.Item
-                isFocused={Number(item.id) === Number(category.id)}
+                isFocused={Number(item.id) === Number(client?.id)}
                 _light={{
                   _pressed: { bg: colors.muted[200] },
                   _focus: { bg: colors.muted[200] },
@@ -253,13 +247,10 @@ const TransactionScreen = props => {
                 }}
                 borderRadius="lg"
                 onPress={() => {
-                  setCategory(item);
-                  onCloseCategoryList();
+                  setClient(item);
+                  onCloseClientList();
                 }}>
-                <HStack alignItems="center" space={2}>
-                  <Emoji shortName={item.icon} fontSize="xl" />
-                  <Text numberOfLines={1}>{item.name}</Text>
-                </HStack>
+                <Text numberOfLines={1}>{item.name}</Text>
               </Actionsheet.Item>
             )}
             keyExtractor={item => String(item.id)}
@@ -275,8 +266,8 @@ const TransactionScreen = props => {
           <FlatList
             w="100%"
             data={[
-              { label: "Gasto", value: false },
-              { label: "Ingreso", value: true },
+              { label: "Venta", value: false },
+              { label: "Pago", value: true },
             ]}
             renderItem={({ item }) => (
               <Actionsheet.Item

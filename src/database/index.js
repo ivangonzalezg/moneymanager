@@ -36,8 +36,9 @@ const configure = async () => {
   await Promise.all([
     createTable(constants.tables.TRANSACTIONS, [
       "id INTEGER PRIMARY KEY",
-      "amount INTEGER",
+      "amount INTEGER NOT NULL",
       "category_id INTEGER",
+      "client_id INTEGER",
       "date DATETIME",
       "description TEXT",
       "is_income BOOLEAN DEFAULT 0",
@@ -125,11 +126,15 @@ const getMonthBalance = (date = new Date().getTime()) =>
 const getTransactions = (offset = 0, query = "") =>
   new Promise(resolve =>
     executeSql(
-      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon FROM ${
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon, cl.name AS clientName FROM ${
         constants.tables.TRANSACTIONS
-      } t JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id ${
+      } t LEFT JOIN ${
+        constants.tables.CATEGORIES
+      } c ON t.category_id = c.id LEFT JOIN ${
+        constants.tables.CLIENTS
+      } cl ON t.client_id = cl.id ${
         query
-          ? `WHERE t.amount = "${query}" OR c.name LIKE "%${query}%" OR t.description LIKE "%${query}%"`
+          ? `WHERE t.amount = "${query}" OR c.name LIKE "%${query}%" OR t.description LIKE "%${query}%" OR cl.name LIKE "%${query}%"`
           : ""
       } ORDER BY date DESC, id DESC LIMIT 20 OFFSET ${offset}`,
       [],
@@ -349,6 +354,22 @@ const updateClient = (id = 0, data = {}) =>
     ),
   );
 
+const getBalance = (date = new Date().getTime()) =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT SUM(CASE WHEN is_income = 1 THEN amount ELSE amount*-1 END) AS total FROM ${constants.tables.TRANSACTIONS}`,
+      [],
+      (_, results) => {
+        if (results.rows.item(0).total !== null) {
+          resolve(results.rows.item(0).total);
+        } else {
+          resolve(0);
+        }
+      },
+      () => resolve(0),
+    ),
+  );
+
 const database = {
   configure,
   createTransactions,
@@ -371,6 +392,7 @@ const database = {
   getClients,
   createClient,
   updateClient,
+  getBalance,
 };
 
 export default database;

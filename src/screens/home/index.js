@@ -29,7 +29,7 @@ import TransactionHeader from "../../components/transactionHeader";
 const HomeScreen = props => {
   const { navigation } = props;
   const state = useContext(StateContext);
-  const [monthBalance, setMonthBalance] = useState(0);
+  const [balance, setBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [sections, setSections] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
@@ -39,8 +39,8 @@ const HomeScreen = props => {
   const getTransactions = async (_offset = 0) => {
     try {
       setIsRefreshing(true);
-      const _monthBalance = await database.getMonthBalance();
-      setMonthBalance(_monthBalance);
+      const _balance = await database.getMonthBalance();
+      setBalance(_balance);
       let _transactions = await database.getTransactions(_offset);
       if (offset > 0) {
         _transactions = [...transactions, ..._transactions];
@@ -101,13 +101,13 @@ const HomeScreen = props => {
         ListHeaderComponent={() => (
           <Center mt={5}>
             <Text fontSize="sm" opacity={70}>
-              Balance de este mes
+              Balance general
             </Text>
             <Heading
               fontSize="4xl"
-              _light={monthBalance > 0 && { color: "success.600" }}
-              _dark={monthBalance > 0 && { color: "success.400" }}>
-              {formatToCurrency(Math.abs(monthBalance))}
+              _light={balance > 0 && { color: "success.600" }}
+              _dark={balance > 0 && { color: "success.400" }}>
+              {formatToCurrency(Math.abs(balance))}
             </Heading>
           </Center>
         )}
