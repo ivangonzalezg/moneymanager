@@ -14,7 +14,7 @@ import Container from "../../components/container";
 import database from "../../database";
 import { StateContext } from "../../contexts";
 import { formatToCurrency } from "../../utils";
-import { RefreshControl } from "react-native";
+import { Pressable, RefreshControl } from "react-native";
 
 const Sales = () => {
   const state = useContext(StateContext);
@@ -75,19 +75,34 @@ const Sales = () => {
         showsVerticalScrollIndicator={false}
         keyExtractor={item => String(item.id)}
         renderItem={({ item: sale }) => (
-          <HStack alignItems="center" marginY={3}>
-            <Text flex={1} numberOfLines={1}>
+          <HStack alignItems="center" marginY={3} space={3}>
+            <Text bold flex={1} numberOfLines={1}>
               {sale.name}
             </Text>
             <Text
-              _light={{
-                color: sale.total >= 0 ? "success.600" : "error.600",
-              }}
-              _dark={{
-                color: sale.total >= 0 ? "success.400" : "error.400",
-              }}>
-              {formatToCurrency(sale.total)}
+              bold
+              _light={{ color: sale.total >= 0 ? "success.600" : "error.600" }}
+              _dark={{ color: sale.total >= 0 ? "success.400" : "error.400" }}>
+              {formatToCurrency(Math.abs(sale.total))}
             </Text>
+            <Pressable>
+              <Icon
+                as={MaterialCommunityIcons}
+                name="history"
+                size="lg"
+                _light={{ color: "muted.900" }}
+                _dark={{ color: "muted.50" }}
+              />
+            </Pressable>
+            <Pressable>
+              <Icon
+                as={MaterialCommunityIcons}
+                name="whatsapp"
+                size="lg"
+                _light={{ color: "green.600" }}
+                _dark={{ color: "green.400" }}
+              />
+            </Pressable>
           </HStack>
         )}
         ItemSeparatorComponent={Divider}

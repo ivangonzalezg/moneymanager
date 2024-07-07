@@ -26,8 +26,12 @@ const TransactionCard = props => {
               <Text
                 bold
                 alignSelf="flex-end"
-                _light={item.is_income && { color: "success.600" }}
-                _dark={item.is_income && { color: "success.400" }}>
+                _light={{
+                  color: item.is_income ? "success.600" : "error.600",
+                }}
+                _dark={{
+                  color: item.is_income ? "success.400" : "error.400",
+                }}>
                 {formatToCurrency(item.amount)}
               </Text>
               <Text alignSelf="flex-end" opacity={70}>
