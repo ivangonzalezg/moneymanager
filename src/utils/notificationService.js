@@ -12,7 +12,7 @@ const body = "Es tiempo de guardar tus gastos";
 if (isAndroid) {
   PushNotification.createChannel({
     channelId: constants.channelId,
-    channelName: "Money Manager",
+    channelName: "Mister Toby",
     playSound: true,
     soundName: "default",
   });
