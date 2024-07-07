@@ -11,6 +11,7 @@ const routes = {
   search: "search",
   clients: "clients",
   client: "client",
+  sales: "sales",
 };
 
 export default routes;

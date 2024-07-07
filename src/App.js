@@ -38,9 +38,12 @@ import NotificationsScreen from "./screens/notifications";
 import SearchScreen from "./screens/search";
 import ClientsScreen from "./screens/clients";
 import ClientScreen from "./screens/client";
+import SalesScreen from "./screens/sales";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const isSales = true;
 
 const Tabs = props => {
   const { navigation } = props;
@@ -89,8 +92,8 @@ const Tabs = props => {
         }}
       />
       <Tab.Screen
-        name={routes.charts}
-        component={ChartsScreen}
+        name={routes.sales}
+        component={isSales ? SalesScreen : ChartsScreen}
         options={{
           tabBarIcon: _props => (
             <Icon as={Feather} name="pie-chart" size="xl" {..._props} />

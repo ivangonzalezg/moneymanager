@@ -370,6 +370,16 @@ const getBalance = (date = new Date().getTime()) =>
     ),
   );
 
+const getSalesByClient = () =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT c.id AS id, c.name AS name, SUM(CASE WHEN is_income = 1 THEN amount ELSE amount*-1 END) AS total FROM ${constants.tables.TRANSACTIONS} t JOIN ${constants.tables.CLIENTS} c ON t.client_id = c.id GROUP BY t.client_id ORDER BY name ASC`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
 const database = {
   configure,
   createTransactions,
@@ -393,6 +403,7 @@ const database = {
   createClient,
   updateClient,
   getBalance,
+  getSalesByClient,
 };
 
 export default database;
