@@ -14,7 +14,7 @@ import Container from "../../components/container";
 import database from "../../database";
 import { StateContext } from "../../contexts";
 import { formatToCurrency } from "../../utils";
-import { Pressable, RefreshControl } from "react-native";
+import { Linking, Pressable, RefreshControl } from "react-native";
 import routes from "../../routes";
 
 const Sales = props => {
@@ -99,15 +99,20 @@ const Sales = props => {
                 _dark={{ color: "muted.50" }}
               />
             </Pressable>
-            <Pressable>
-              <Icon
-                as={MaterialCommunityIcons}
-                name="whatsapp"
-                size="lg"
-                _light={{ color: "green.600" }}
-                _dark={{ color: "green.400" }}
-              />
-            </Pressable>
+            {sale?.phone && (
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(`https://wa.me/57${sale.phone}`)
+                }>
+                <Icon
+                  as={MaterialCommunityIcons}
+                  name="whatsapp"
+                  size="lg"
+                  _light={{ color: "green.600" }}
+                  _dark={{ color: "green.400" }}
+                />
+              </Pressable>
+            )}
           </HStack>
         )}
         ItemSeparatorComponent={Divider}
