@@ -36,6 +36,8 @@ import CategoryScreen from "./screens/category";
 import AppearanceScreen from "./screens/appearance";
 import NotificationsScreen from "./screens/notifications";
 import SearchScreen from "./screens/search";
+import ClientsScreen from "./screens/clients";
+import ClientScreen from "./screens/client";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -139,6 +141,12 @@ const App = () => {
           .then(categories =>
             dispatchState({ type: constants.state.CATEGORIES, categories }),
           ),
+      updateClients: () =>
+        database
+          .getClients()
+          .then(clients =>
+            dispatchState({ type: constants.state.CLIENTS, clients }),
+          ),
       ...state,
     }),
     [state],
@@ -162,6 +170,8 @@ const App = () => {
       await database.createCategories();
       const categories = await database.getCategories();
       dispatchState({ type: constants.state.CATEGORIES, categories });
+      const clients = await database.getClients();
+      dispatchState({ type: constants.state.CLIENTS, clients });
       const lastCategory = await AsyncStorage.getItem(
         constants.storage.LAST_CATEGORY,
       );
@@ -233,6 +243,8 @@ const App = () => {
                   component={NotificationsScreen}
                 />
                 <Stack.Screen name={routes.search} component={SearchScreen} />
+                <Stack.Screen name={routes.clients} component={ClientsScreen} />
+                <Stack.Screen name={routes.client} component={ClientScreen} />
               </Stack.Navigator>
             )}
           </Box>

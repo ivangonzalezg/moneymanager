@@ -8,16 +8,24 @@ const category = {
   icon: "",
 };
 
+const client = {
+  id: 0,
+  name: "",
+  phone: "",
+};
+
 const initialState = {
   transactions: "",
   category,
   categories: [category],
+  clients: [client],
 };
 
 const StateContext = createContext({
   updateTransactions: () => {},
   updateCategory: () => {},
   updateCategories: () => {},
+  updateClients: () => {},
   ...initialState,
 });
 
@@ -37,6 +45,11 @@ const stateReducer = (prevState, action) => {
       return {
         ...prevState,
         categories: action.categories,
+      };
+    case constants.state.CLIENTS:
+      return {
+        ...prevState,
+        clients: action.clients,
       };
     default:
       return prevState;

@@ -9,6 +9,8 @@ const routes = {
   appearance: "appearance",
   notifications: "notifications",
   search: "search",
+  clients: "clients",
+  client: "client",
 };
 
 export default routes;

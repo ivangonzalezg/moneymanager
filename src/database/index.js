@@ -48,6 +48,11 @@ const configure = async () => {
       "name TEXT NOT NULL",
       "icon TEXT NOT NULL",
     ]),
+    createTable(constants.tables.CLIENTS, [
+      "id INTEGER PRIMARY KEY",
+      "name TEXT NOT NULL",
+      "phone TEXT",
+    ]),
   ]);
 };
 
@@ -308,6 +313,42 @@ const getMonths = () =>
     ),
   );
 
+const getClients = () =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT * FROM ${constants.tables.CLIENTS}`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
+const createClient = (data = {}) =>
+  new Promise(resolve =>
+    executeSql(
+      `INSERT INTO ${constants.tables.CLIENTS} (${Object.keys(data).join(
+        ",",
+      )}) VALUES (${Object.keys(data)
+        .map(() => "?")
+        .join(",")})`,
+      Object.values(data),
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
+const updateClient = (id = 0, data = {}) =>
+  new Promise(resolve =>
+    executeSql(
+      `UPDATE ${constants.tables.CLIENTS} SET ${Object.keys(data)
+        .map(key => `${key} = "${data[key]}"`)
+        .join(", ")} WHERE id = ${id}`,
+      [],
+      () => resolve(true),
+      () => resolve(false),
+    ),
+  );
+
 const database = {
   configure,
   createTransactions,
@@ -327,6 +368,9 @@ const database = {
   getAllTableData,
   getExpensesByCategory,
   getMonths,
+  getClients,
+  createClient,
+  updateClient,
 };
 
 export default database;

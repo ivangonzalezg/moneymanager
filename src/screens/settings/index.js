@@ -179,21 +179,21 @@ const Settings = props => {
         icon="layout"
         onPress={() => navigation.navigate(routes.appearance)}
       />
-      <Br />
+      {/* <Br />
       <ButtonItem
         borderTopRadius
         borderBottomRadius
         label="Notificaciones"
         icon="bell"
         onPress={() => navigation.navigate(routes.notifications)}
-      />
+      /> */}
       <Br />
       <ButtonItem
         borderTopRadius
         borderBottomRadius
-        label="Categorías"
+        label="Clientes"
         icon="list"
-        onPress={() => navigation.navigate(routes.categories)}
+        onPress={() => navigation.navigate(routes.clients)}
       />
       <Br />
       <ButtonItem
