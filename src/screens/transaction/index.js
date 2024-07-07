@@ -230,7 +230,6 @@ const TransactionScreen = props => {
           setDate(_date);
           onCloseDatePicker();
         }}
-        maximumDate={new Date()}
         onCancel={onCloseDatePicker}
       />
       <Actionsheet
