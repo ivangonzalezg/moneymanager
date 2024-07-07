@@ -6,6 +6,22 @@ install! 'cocoapods', :deterministic_uuids => false
 
 production = ENV["PRODUCTION"] == "1"
 
+def find_and_replace(dir, findstr, replacestr)
+  contents = File.read(dir)
+  unless contents.include?(replacestr)    
+    Dir[dir].each do |name|
+        text = File.read(name)
+        replace = text.gsub(findstr,replacestr)
+        if text != replace
+            puts "Fix: " + name
+            File.open(name, "w") { |file| file.puts replace }
+            STDOUT.flush
+        end
+    end
+    Dir[dir + '*/'].each(&method(:find_and_replace))
+  end
+end
+
 target 'moneymanager' do
   config = use_native_modules!
 
@@ -32,5 +48,8 @@ target 'moneymanager' do
   post_install do |installer|
     react_native_post_install(installer)
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    find_and_replace("Pods/Flipper-Boost-iOSX/boost/container_hash/hash.hpp","struct hash_base : std::unary_function<T, std::size_t> {};", "struct hash_base : std::__unary_function<T, std::size_t> {};") 
+    find_and_replace("Pods/boost/boost/container_hash/hash.hpp","struct hash_base : std::unary_function<T, std::size_t> {};", "struct hash_base : std::__unary_function<T, std::size_t> {};") 
+    find_and_replace("Pods/Flipper/xplat/Flipper/FlipperTransportTypes.h","#include <string>", "#include <functional>\n#include <string>")
   end
 end
