@@ -4,6 +4,9 @@ import Container from "../../components/container";
 import BackButton from "../../components/backButton";
 import database from "../../database";
 import { StateContext } from "../../contexts";
+import { selectContactPhone } from "react-native-select-contact";
+import { PermissionsAndroid, Platform } from "react-native";
+import { handleError } from "../../utils";
 
 const Client = props => {
   const {
@@ -31,6 +34,30 @@ const Client = props => {
       state.updateClients();
       navigation.goBack();
     } catch (_) {}
+  };
+
+  const onSelectContact = async () => {
+    try {
+      if (Platform.OS === "android") {
+        const request = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        );
+        if (
+          request === PermissionsAndroid.RESULTS.DENIED ||
+          request === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN
+        ) {
+          throw Error("Permission Denied");
+        }
+      }
+      const selection = await selectContactPhone();
+      if (selection) {
+        const { contact, selectedPhone } = selection;
+        setName(contact.name);
+        setPhone(selectedPhone.number.replace(/\D/g, ""));
+      }
+    } catch (error) {
+      handleError(error);
+    }
   };
 
   return (
@@ -80,6 +107,9 @@ const Client = props => {
           onSubmitEditing={onSave}
           ref={phoneInput}
         />
+        <Button w="full" onPress={onSelectContact}>
+          Escoger de contactos
+        </Button>
         <Button w="full" onPress={onSave} disabled={!name || isSaving}>
           Guardar
         </Button>

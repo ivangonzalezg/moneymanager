@@ -1,7 +1,7 @@
 import moment from "moment";
 import numbro from "numbro";
 import * as RNLocalize from "react-native-localize";
-import { Linking } from "react-native";
+import { Alert, Linking, Platform, ToastAndroid } from "react-native";
 
 const is24Hour = RNLocalize.uses24HourClock();
 
@@ -70,6 +70,14 @@ const openUrl = url =>
 const getClient = (id = 0, clients = []) =>
   clients.find(client => client.id === id) || null;
 
+function handleError(error = new Error("Error")) {
+  if (Platform.OS === "android") {
+    ToastAndroid.show(error.message, ToastAndroid.SHORT);
+  } else {
+    Alert.alert(error.message);
+  }
+}
+
 export {
   capitalize,
   formatToCurrency,
@@ -79,4 +87,5 @@ export {
   transformTransactionsIntoSections,
   openUrl,
   getClient,
+  handleError,
 };
