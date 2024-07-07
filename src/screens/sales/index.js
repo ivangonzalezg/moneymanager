@@ -15,8 +15,10 @@ import database from "../../database";
 import { StateContext } from "../../contexts";
 import { formatToCurrency } from "../../utils";
 import { Pressable, RefreshControl } from "react-native";
+import routes from "../../routes";
 
-const Sales = () => {
+const Sales = props => {
+  const { navigation } = props;
   const state = useContext(StateContext);
   const [sales, setSales] = useState([]);
   const [isLoadingSales, setIsLoadingSales] = useState(true);
@@ -85,7 +87,10 @@ const Sales = () => {
               _dark={{ color: sale.total >= 0 ? "success.400" : "error.400" }}>
               {formatToCurrency(Math.abs(sale.total))}
             </Text>
-            <Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate(routes.clientTransactions, sale)
+              }>
               <Icon
                 as={MaterialCommunityIcons}
                 name="history"

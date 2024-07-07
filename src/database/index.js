@@ -380,6 +380,16 @@ const getSalesByClient = () =>
     ),
   );
 
+const getTransactionsByClient = (client = 0) =>
+  new Promise(resolve =>
+    executeSql(
+      `SELECT t.*, c.name AS categoryName, c.icon AS categoryIcon, cl.name AS clientName FROM ${constants.tables.TRANSACTIONS} t LEFT JOIN ${constants.tables.CATEGORIES} c ON t.category_id = c.id LEFT JOIN ${constants.tables.CLIENTS} cl ON t.client_id = cl.id WHERE t.client_id = ${client} ORDER BY date DESC, id DESC`,
+      [],
+      (_, results) => resolve(results.rows.raw()),
+      () => resolve([]),
+    ),
+  );
+
 const database = {
   configure,
   createTransactions,
@@ -404,6 +414,7 @@ const database = {
   updateClient,
   getBalance,
   getSalesByClient,
+  getTransactionsByClient,
 };
 
 export default database;

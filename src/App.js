@@ -39,6 +39,7 @@ import SearchScreen from "./screens/search";
 import ClientsScreen from "./screens/clients";
 import ClientScreen from "./screens/client";
 import SalesScreen from "./screens/sales";
+import ClientTransactionsScreen from "./screens/clientTransactions";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -248,6 +249,10 @@ const App = () => {
                 <Stack.Screen name={routes.search} component={SearchScreen} />
                 <Stack.Screen name={routes.clients} component={ClientsScreen} />
                 <Stack.Screen name={routes.client} component={ClientScreen} />
+                <Stack.Screen
+                  name={routes.clientTransactions}
+                  component={ClientTransactionsScreen}
+                />
               </Stack.Navigator>
             )}
           </Box>

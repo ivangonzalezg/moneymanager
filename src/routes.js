@@ -12,6 +12,7 @@ const routes = {
   clients: "clients",
   client: "client",
   sales: "sales",
+  clientTransactions: "client_transactions",
 };
 
 export default routes;
